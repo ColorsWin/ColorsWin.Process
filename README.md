@@ -55,6 +55,7 @@ namespace ColorsWin.Process.Test
 |MQ|X|next version|
 |File|X|next version||
 
+![avatar](https://github.com/ColorsWin/ColorsWin.Process/blob/master/MessageType.png)
 
 #### Others:
 
