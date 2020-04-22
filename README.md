@@ -47,8 +47,8 @@ namespace ColorsWin.Process.Test
 
 -----------------------------------
 #### ProcessMessageType:
-|Type       |Remark          |Remark          |
-| -------------|:--------------:|
+|Type       |Complete          |Remark          |
+| -------------|:--------------:|:--------------|
 |ShareMemory|default| every Message wait 10 Millisecond ,Need to optimize |
 |NamedPipe|√|very fast,Like Socket|
 |Message|√||
