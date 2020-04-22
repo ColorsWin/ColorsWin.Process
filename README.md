@@ -48,14 +48,14 @@ namespace ColorsWin.Process.Test
 -----------------------------------
 #### ProcessMessageType:
 |Type       |Complete          |Remark          |
-| -------------|:--------------:|:--------------|
+| -------------|:--------------:|:--------------:|
 |ShareMemory|default| every Message wait 10 Millisecond ,Need to optimize |
 |NamedPipe|√|very fast,Like Socket|
 |Message|√||
 |MQ|X|next version|
 |File|X|next version||
 
-![avatar](https://github.com/ColorsWin/ColorsWin.Process/blob/master/MessageType.png)
+
 
 #### Others:
 
