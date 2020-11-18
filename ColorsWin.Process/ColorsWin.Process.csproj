@@ -1,17 +1,28 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-   <TargetFrameworks>net40;netstandard2.0</TargetFrameworks>
-   <AssemblyVersion>1.0.5.0</AssemblyVersion>
-   <Version>1.0.6</Version>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net40;netstandard2.0</TargetFrameworks>
+		<AssemblyVersion>1.0.6.0</AssemblyVersion>
+		<Version>1.0.6</Version>
+		<PackageIconUrl>https://multicolorwin.oss-cn-beijing.aliyuncs.com/image/256.png</PackageIconUrl>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<Description>communication between processes, through memoryShared,namePipes,messages and so on &amp;#x000A;
+	      进程之间的通信，通过进程共享，命名管道，发送消息等等</Description>
+		<PackageTags>Process,ProcessCommunication,Messages</PackageTags>
+		<PackageProjectUrl>http://ColorsWin.com/</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/ColorsWin/ColorsWin.Process</RepositoryUrl>
+		<Copyright>Copyright 2020</Copyright>
+		<PackageReleaseNotes>communication between processes, through memoryShared,namePipes,messages and so on &amp;#x000A;
+	      进程之间的通信，通过进程共享，命名管道，发送消息等等</PackageReleaseNotes>
+		<RepositoryType>MIT</RepositoryType>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\Build\Debug\</OutputPath>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<OutputPath>..\Build\Debug\</OutputPath>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>..\Build\Release</OutputPath>
-  </PropertyGroup> 
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<OutputPath>..\Build\Release</OutputPath>
+	</PropertyGroup>
 
 </Project>
