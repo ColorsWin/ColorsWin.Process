@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\Debug</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="TestProcessMessage.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ColorsWin.Process\ColorsWin.Process.csproj" />
+  </ItemGroup>
+
+  <Import Project="..\Process.ShareTest\Process.ShareTest.projitems" Label="Shared" />
+
+</Project>
