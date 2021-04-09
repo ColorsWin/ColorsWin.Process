@@ -7,7 +7,7 @@ namespace ProcessCoreTest
     {
         static void Main(string[] args)
         {
-            TestNamedPipe.OutPutProcessData();
+            //TestNamedPipe.OutPutProcessData();
             TestMemoryShare.OutPut();
             Console.Read();
         }

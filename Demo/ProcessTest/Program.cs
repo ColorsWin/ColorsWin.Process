@@ -7,8 +7,8 @@ namespace ProcessTest
     {
         static void Main(string[] args)
         {
-            //TestMemoryShare.OutPut();
-            TestNamedPipe.OutPutProcessData();
+            TestMemoryShare.OutPut();
+            // TestNamedPipe.OutPutProcessData();
 
             Console.Read();
         }
