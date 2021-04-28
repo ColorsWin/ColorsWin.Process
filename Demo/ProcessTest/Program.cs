@@ -1,4 +1,5 @@
-﻿using Process.ShareTest;
+﻿using ColorsWin.Process;
+using Process.ShareTest;
 using System;
 
 namespace ProcessTest
@@ -7,6 +8,8 @@ namespace ProcessTest
     {
         static void Main(string[] args)
         {
+            var exit = ProcessHelper.HadRun();
+
             TestMemoryShare.OutPut();
             // TestNamedPipe.OutPutProcessData();
 
