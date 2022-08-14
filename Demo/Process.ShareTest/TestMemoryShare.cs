@@ -1,7 +1,5 @@
 ﻿using ColorsWin.Process;
 using System;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace Process.ShareTest
 {
@@ -26,21 +24,31 @@ namespace Process.ShareTest
             bool write = IsRun();
             if (write)
             {
-                Console.WriteLine("当前程序将作为发送端: 因为已经运行该程序------:当前key为" + processKey);
+                Console.WriteLine("当前程序将作为发送端: 当前key为" + processKey);
                 string tempData = Console.ReadLine();
                 while (tempData != "exit")
                 {
                     ProcessMessageManager.SendMessage(processKey, tempData);
                     Console.WriteLine("写入内存数据:" + tempData);
+
+                    var data = System.Text.Encoding.Default.GetBytes(tempData);
+                    ProcessMessageManager.SendData(processKey, data);
+
                     tempData = Console.ReadLine();
                 }
             }
             else
             {
-                Console.WriteLine("当前程序将作为服务端,监听消息已经启动------:当前key为" + processKey);
+                Console.WriteLine("当前程序将作为服务端,------:当前key为" + processKey);
                 ProcessMessageManager.AcceptMessage(processKey, (item) =>
                 {
-                    Console.WriteLine(processKey + "监听--------" + string.Join("####", item));
+                    Console.WriteLine(processKey + "：AcceptMessage--------" + string.Join("####", item));
+                });
+
+                ProcessMessageManager.AcceptData(processKey, (item) =>
+                {
+                    var data = System.Text.Encoding.Default.GetString(item);
+                    Console.WriteLine(processKey + "：AcceptData:--------" + data);
                 });
             }
         }
@@ -55,7 +63,6 @@ namespace Process.ShareTest
             {
                 Console.WriteLine($"AllMessage-进程Key:{key}---消息为:----" + message);
             };
-
 
             ProcessMessageManager.AcceptMessage(processKey, (item) =>
             {

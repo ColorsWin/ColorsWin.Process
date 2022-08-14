@@ -10,11 +10,7 @@ namespace ColorsWin.Process.Helpers
     /// </summary>
     public class StringStreamHelper
     {
-        /// <summary>
-        /// 像流里面写入字符串
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <param name="data"></param>
+      
         public static void WriteData(Stream stream, byte[] data, bool isString = false)
         {
             byte flag = (byte)(isString ? 1 : 0);
@@ -24,12 +20,7 @@ namespace ColorsWin.Process.Helpers
             stream.Write(headerData, 0, headerData.Length);
             stream.Write(data, 0, data.Length);
         }
-
-        /// <summary>
-        /// 从流里面读取字符串
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <returns></returns>
+    
         public static byte[] ReadData(Stream stream, out bool isString)
         {
             var flag = stream.ReadByte();
@@ -46,15 +37,12 @@ namespace ColorsWin.Process.Helpers
             return contentData;
         }
 
+
         #region 自定义格式
 
         // 前面4个字节存储数组个数N, N里面每一个占用4个字节存储每个字符串字节大小
 
-        /// <summary>
-        /// 像流里面写入字符串
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <param name="dataInfo"></param>
+      
         public static void OwnerWriteData(Stream stream, params string[] dataInfo)
         {
             var dataLength = BitConverter.GetBytes(dataInfo.Length);
@@ -77,11 +65,7 @@ namespace ColorsWin.Process.Helpers
         }
 
 
-        /// <summary>
-        /// 从流里面读取字符串
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <returns></returns>
+       
         public static string[] OwnerReadData(Stream stream)
         {
             var dataLength = new byte[4];

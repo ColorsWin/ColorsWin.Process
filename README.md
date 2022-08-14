@@ -12,7 +12,7 @@ namespace ColorsWin.Process.Test
         static void Main(string[] args)
         {
             string processKey = "ProcessMessage_Key";
-            ProcessMessageManager.WriteData(processKey, " Hello App1");
+            ProcessMessageManager.SendMessage(processKey, " Hello App1");
             Console.Read();
         }
     }
@@ -35,7 +35,7 @@ namespace ColorsWin.Process.Test
         {
             string processKey = "ProcessMessage_Key";
 
-            ProcessMessageManager.ListenMessage(processKey, (item) =>
+            ProcessMessageManager.AcceptMessage(processKey, (item) =>
             {
                 Console.WriteLine(processKey + "-----Message:" + item);
             });

@@ -6,18 +6,15 @@
 		<Version>1.0.8</Version>
 		<PackageIconUrl>https://multicolorwin.oss-cn-beijing.aliyuncs.com/image/256.png</PackageIconUrl>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Description>
-			communication between processes, through memoryShared,namePipes,messages and so on
-			进程之间的通信，通过进程共享，命名管道，发送消息等等
+		<Description>Communication between processes, through memory sharing, named pipes, files, sending messages
+also includes process help
 		</Description>
 		<PackageTags>Process,ProcessCommunication,Messages</PackageTags>
 		<PackageProjectUrl>http://ColorsWin.com/</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ColorsWin/ColorsWin.Process</RepositoryUrl>
-		<Copyright>Copyright 2021</Copyright>
-		<PackageReleaseNotes>
-			communication between processes, through memoryShared,namePipes,messages and so on
-			进程之间的通信，通过进程共享，命名管道，发送消息等等
-		</PackageReleaseNotes>
+		<Copyright>Copyright 2022</Copyright>
+		<PackageReleaseNotes>Communication between processes, through memory sharing, named pipes, files, sending messages
+also includes process help</PackageReleaseNotes>
 		<RepositoryType>MIT</RepositoryType>
 		<FileVersion>1.0.8.0</FileVersion>
 	</PropertyGroup>
