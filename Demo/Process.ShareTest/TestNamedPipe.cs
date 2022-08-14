@@ -13,8 +13,8 @@ namespace Process.ShareTest
         public static void OutPutProcessData()
         {
             string testKey = "testKey";
-           
-            ProcessMessageManager.Init(ProcessMessageType.NamedPipe);
+            //NamedPipeMessage
+            ProcessMessageConfig.ProcessMessageType = ProcessMessageType.NamedPipe;
 
             bool isRun = ProcessHelper.HadRun(testKey);
             if (isRun)
@@ -22,7 +22,7 @@ namespace Process.ShareTest
                 Console.WriteLine("当前程序将作为发送端: 因为已经运行该程序------:当前key为" + testKey);
                 for (int i = 0; i < MaxCount; i++)
                 {
-                    ProcessMessageManager.WriteData(testKey, i.ToString());
+                    ProcessMessageManager.SendMessage(testKey, i.ToString() + "\r\n" + "自己数据");
                     Console.WriteLine("消息发送:" + i);
                 }
             }
@@ -31,7 +31,7 @@ namespace Process.ShareTest
                 //var message = ProcessMessageManager.ReadDataWait(testKey);
 
                 Console.WriteLine("当前程序将作为服务端,监听消息已经启动------:当前key为" + testKey);
-                ProcessMessageManager.ListenMessage("testKey", DefalutMessageManager_AcceptMessage);
+                ProcessMessageManager.AcceptMessage("testKey", DefalutMessageManager_AcceptMessage);
 
                 //ProcessMessageManager.ListenMessage("testKey", (item) => { Console.WriteLine("第二次"); }, false);
 

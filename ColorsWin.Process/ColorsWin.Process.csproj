@@ -2,21 +2,24 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net40;netstandard2.0</TargetFrameworks>
-		<AssemblyVersion>1.0.7.2</AssemblyVersion>
-		<Version>1.0.72</Version>
+		<AssemblyVersion>1.0.8.0</AssemblyVersion>
+		<Version>1.0.8</Version>
 		<PackageIconUrl>https://multicolorwin.oss-cn-beijing.aliyuncs.com/image/256.png</PackageIconUrl>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Description>communication between processes, through memoryShared,namePipes,messages and so on &amp;#x000A;
-	      进程之间的通信，通过进程共享，命名管道，发送消息等等</Description>
+		<Description>
+			communication between processes, through memoryShared,namePipes,messages and so on
+			进程之间的通信，通过进程共享，命名管道，发送消息等等
+		</Description>
 		<PackageTags>Process,ProcessCommunication,Messages</PackageTags>
-		<PackageProjectUrl>https://github.com/ColorsWin/ColorsWin.Process</PackageProjectUrl>
+		<PackageProjectUrl>http://ColorsWin.com/</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ColorsWin/ColorsWin.Process</RepositoryUrl>
 		<Copyright>Copyright 2021</Copyright>
-		<PackageReleaseNotes>communication between processes, through memoryShared,namePipes,messages and so on &amp;#x000A;
-	      进程之间的通信，通过进程共享，命名管道，发送消息等等</PackageReleaseNotes>
+		<PackageReleaseNotes>
+			communication between processes, through memoryShared,namePipes,messages and so on
+			进程之间的通信，通过进程共享，命名管道，发送消息等等
+		</PackageReleaseNotes>
 		<RepositoryType>MIT</RepositoryType>
-		<FileVersion>1.0.7.2</FileVersion>
-		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<FileVersion>1.0.8.0</FileVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -27,4 +30,5 @@
 		<OutputPath>..\Build\Release</OutputPath>
 	</PropertyGroup>
 
+	 
 </Project>

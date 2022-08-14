@@ -14,10 +14,12 @@ namespace ColorsWin.Process.NamedPipe
     {
         private List<NamedPipeServerStream> serverPool = new List<NamedPipeServerStream>();
         private string pipName = "ColorsWinpipName";
+        private Action<byte[]> actionData;
         private Action<string> actionMessage;
-        public NamedPipeListenServer(string pipName, Action<string> actionMessage = null)
+        public NamedPipeListenServer(string pipName, Action<byte[]> actionData, Action<string> actionMessage)
         {
             this.pipName = pipName;
+            this.actionData = actionData;
             this.actionMessage = actionMessage;
         }
 
@@ -29,7 +31,7 @@ namespace ColorsWin.Process.NamedPipe
         {
             var npss = new NamedPipeServerStream(pipName, PipeDirection.InOut, 10);
             serverPool.Add(npss);
-            LogHelper.WriteLine("启动了一个NamedPipeServerStream " + npss.GetHashCode());
+            LogHelper.Debug("创建一个NamedPipeServerStream " + npss.GetHashCode());
             return npss;
         }
 
@@ -44,7 +46,7 @@ namespace ColorsWin.Process.NamedPipe
             {
                 serverPool.Remove(npss);
             }
-            LogHelper.WriteLine("销毁一个NamedPipeServerStream " + npss.GetHashCode());
+            LogHelper.Debug("销毁一个NamedPipeServerStream " + npss.GetHashCode());
         }
 
         public void Run()
@@ -53,7 +55,7 @@ namespace ColorsWin.Process.NamedPipe
             {
                 pipeServer.WaitForConnection();
 
-                LogHelper.WriteLine("建立一个连接 " + pipeServer.GetHashCode());
+                LogHelper.Debug("建立一个连接" + pipeServer.GetHashCode());
 
                 Task.Factory.StartNew(Run);//new Action(Run).BeginInvoke(null, null);//dotnetCore支持有问题
                 try
@@ -61,16 +63,31 @@ namespace ColorsWin.Process.NamedPipe
                     bool isRun = true;
                     while (isRun)
                     {
-                        var sr = new StreamReader(pipeServer);
-                        var message = sr.ReadLine();
-                        if (actionMessage != null)
+                        bool tempIsString;
+
+                        var data = StringStreamHelper.ReadData(pipeServer, out tempIsString);
+                        if (tempIsString)
                         {
-                            actionMessage(message);
+                            if (actionMessage != null)
+                            {
+                                var message = System.Text.Encoding.UTF8.GetString(data);
+                                actionMessage(message);
+                            }
                         }
-                        if (NamedPipeMessage.Wait)
+                        else
                         {
-                            ProcessMessage(message, pipeServer);
+                            if (actionData != null)
+                            {
+                                actionData(data);
+                            }
                         }
+
+
+                        //if (NamedPipeMessage.Wait)
+                        //{
+                        //    ReplyMessageMessage(messages, pipeServer);
+                        //}
+
                         if (!pipeServer.IsConnected)
                         {
                             isRun = false;
@@ -80,7 +97,7 @@ namespace ColorsWin.Process.NamedPipe
                 }
                 catch (IOException e)
                 {
-                    LogHelper.WriteLine($"ERROR: {e.Message}");
+                    LogHelper.Debug($"ERROR: {e.Message}");
                 }
                 finally
                 {
@@ -95,12 +112,12 @@ namespace ColorsWin.Process.NamedPipe
         /// </summary>
         /// <param name="message"></param>
         /// <param name="pipeServer"></param>
-        protected virtual void ProcessMessage(string message, NamedPipeServerStream pipeServer)
+        protected virtual void ReplyMessageMessage(string[] message, NamedPipeServerStream pipeServer)
         {
-            using (var sw = new StreamWriter(pipeServer))
+            using (var streamWriter = new StreamWriter(pipeServer))
             {
-                sw.AutoFlush = true;
-                sw.Write(NamedPipeMessage.ReplyMessageFlat + message);
+                streamWriter.AutoFlush = true;
+                streamWriter.Write(NamedPipeMessage.ReplyMessageFlat);
             }
         }
 

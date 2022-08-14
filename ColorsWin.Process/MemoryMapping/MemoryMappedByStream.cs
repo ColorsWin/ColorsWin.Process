@@ -1,8 +1,7 @@
-﻿using System;
+﻿using ColorsWin.Process.Helpers;
 using System.IO.MemoryMappedFiles;
-using System.Text;
 
-namespace ColorsWin.Process.MemoryMapping
+namespace ColorsWin.Process
 {
     /// <summary>
     /// 共享内存文件数据
@@ -16,26 +15,23 @@ namespace ColorsWin.Process.MemoryMapping
             viewStream = file.CreateViewStream();
         }
 
-        public override void WriteData(string dataInfo)
+        /// <summary>
+        /// 写入数据
+        /// </summary>
+        /// <param name="dataInfo"></param>
+        public override void WriteData(byte[] data)
         {
-            var data = Encoding.UTF8.GetBytes(dataInfo);
-            var dataLength = BitConverter.GetBytes(data.Length);
-
             viewStream.Position = 0;
-            viewStream.Write(dataLength, 0, dataLength.Length);
-            viewStream.Write(data, 0, data.Length);
+            StringStreamHelper.WriteData(viewStream, data, IsString);
         }
 
-        public override string ReadData()
+        public override byte[] ReadData()
         {
             viewStream.Position = 0;
-            var byteLengthData = new byte[4];
-            viewStream.Read(byteLengthData, 0, byteLengthData.Length);
-
-            var strLength = BitConverter.ToInt32(byteLengthData, 0);
-            var data = new byte[strLength];
-            viewStream.Read(data, 0, strLength);
-            return Encoding.UTF8.GetString(data);
+            bool tempIsString;
+            var data = StringStreamHelper.ReadData(viewStream, out tempIsString);
+            IsString = tempIsString;
+            return data;
         }
     }
 }

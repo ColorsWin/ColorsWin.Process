@@ -12,8 +12,9 @@
             if (string.IsNullOrEmpty(name))
             {
                 return null;
-            }   
-            return new MemoryMappedByAccessor(name);
+            }
+            return new MemoryMappedByStream(name);
+            //return new MemoryMappedByAccessor(name);
         }
     }
 }

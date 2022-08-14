@@ -1,4 +1,4 @@
-﻿using ColorsWin.Process;
+﻿using ColorsWin.Process.Helpers;
 using Process.ShareTest;
 using System;
 
@@ -8,10 +8,12 @@ namespace ProcessTest
     {
         static void Main(string[] args)
         {
-            var exit = ProcessHelper.HadRun();
+            //var obj = ByteConvertHelper.Object2Bytes(new string[] { "1\n2323213" });
+            //var t = ByteConvertHelper.Bytes2Object<string[]>(obj);
 
             TestMemoryShare.OutPut();
-            // TestNamedPipe.OutPutProcessData();
+
+            //TestNamedPipe.OutPutProcessData();
 
             Console.Read();
         }

@@ -12,7 +12,6 @@ namespace ColorsWin.Process
     {
         private EventWaitHandle eventWait = null;
         private MemoryMappedFileObj memoryFile = null;
-        //标识符防止重复
         private const string MemoryMappedFileNameTag = "_MemoryMappedFileName_ColorsWin";
         private const string EventWaitNameTag = "_EventWaitName_ColorsWin";
         private string processKey = "eventWaitName";
@@ -29,8 +28,8 @@ namespace ColorsWin.Process
         /// </summary>
         private void Init(bool read)
         {
-            memoryFile = MemoryMappedFileHelper.CreateMemoryMappedFileObj(processKey + MemoryMappedFileNameTag);
-            eventWait = EventWaitHandleHelper.CreateEventHande(processKey + EventWaitNameTag, false);
+            memoryFile = MemoryMappedFileHelper.CreateMemoryMappedFileObj("Global\\" + processKey + MemoryMappedFileNameTag);
+            eventWait = EventWaitHandleHelper.CreateEventHande("Global\\" + processKey + EventWaitNameTag, false);
             if (read)
             {
                 Task.Factory.StartNew(WaitForMessage);
@@ -45,27 +44,33 @@ namespace ColorsWin.Process
             while (true)
             {
                 eventWait.WaitOne();
-                var message = ReadMessage();
-                OnAcceptMessage(message);
+                var data = ReadData();
+                if (memoryFile.IsString)
+                {
+                    if (AcceptMessage != null)
+                    {
+                        var message = System.Text.Encoding.Default.GetString(data);
+                        AcceptMessage(message);
+                    }
+                }
+                else
+                {
+                    if (AcceptData != null)
+                    {
+                        AcceptData(data);
+                    }
+                }
+
                 eventWait.Reset();
             }
         }
 
-        /// <summary>
-        /// 执行事件
-        /// </summary>
-        /// <param name="message"></param>
-        protected void OnAcceptMessage(string message)
-        {
-            if (AcceptMessage != null)
-            {
-                AcceptMessage(message);
-            }
-        }
+
 
         #region 接口实现
 
         public event Action<string> AcceptMessage;
+        public event Action<byte[]> AcceptData;
 
         /// <summary>
         /// 内存读取数据
@@ -73,16 +78,30 @@ namespace ColorsWin.Process
         /// <returns></returns>
         public string ReadMessage()
         {
-            return memoryFile.ReadData();
+            var data = ReadData();
+            if (data == null)
+            {
+                return null;
+            }
+            return System.Text.Encoding.Default.GetString(data);
         }
+
         /// <summary>
         /// 进程发送消息
         /// </summary>
         /// <returns></returns>
         public bool SendMessage(string message)
         {
-            memoryFile.WriteData(message);
+            var data = System.Text.Encoding.Default.GetBytes(message);
+            memoryFile.IsString = true;
+            return SendData(data);
+        }
 
+
+        public bool SendData(byte[] message)
+        {
+            memoryFile.WriteData(message);
+            memoryFile.IsString = false;
             if (eventWait != null)
             {
                 eventWait.Set();
@@ -97,16 +116,11 @@ namespace ColorsWin.Process
             return false;
         }
 
-        /// <summary>
-        /// 等待读取一次消息
-        /// </summary>
-        public string WaitOneForMessage()
+        public byte[] ReadData()
         {
-            eventWait.WaitOne();
-            var message = ReadMessage();
-            eventWait.Reset();
-            return message;
+            return memoryFile.ReadData();
         }
-        #endregion 
+
+        #endregion
     }
 }

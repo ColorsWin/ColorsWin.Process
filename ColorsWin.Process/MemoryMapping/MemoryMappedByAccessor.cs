@@ -1,5 +1,4 @@
 ﻿using System.IO.MemoryMappedFiles;
-using System.Text;
 
 namespace ColorsWin.Process
 {
@@ -13,19 +12,37 @@ namespace ColorsWin.Process
         {
             viewAccessor = file.CreateViewAccessor();
         }
-        public override void WriteData(string dataInfo)
-        {
-            var data = Encoding.UTF8.GetBytes(dataInfo);
 
-            viewAccessor.Write(0, data.Length);
-            viewAccessor.WriteArray<byte>(4, data, 0, data.Length);
-        }
-        public override string ReadData()
+        public override void WriteData(byte[] data)
         {
-            int dataLength = viewAccessor.ReadInt32(0);
-            var data = new byte[dataLength];
-            viewAccessor.ReadArray<byte>(4, data, 0, dataLength);
-            return Encoding.UTF8.GetString(data);
+            int position = 0;
+            byte flag = (byte)(IsString ? 1 : 0);
+            viewAccessor.Write(position, flag);
+            position += 1;
+
+            viewAccessor.Write(position, data.Length);
+            position += 4;
+            viewAccessor.WriteArray<byte>(position, data, 0, data.Length);
         }
+
+        public override byte[] ReadData()
+        {
+            int position = 0;
+
+            int flag = viewAccessor.ReadByte(position);
+            position += 1;
+
+            int dataLength = viewAccessor.ReadInt32(position);
+            if (dataLength == 0)
+            {
+                return null;
+            }
+            position += 4;
+            var data = new byte[dataLength];
+            viewAccessor.ReadArray<byte>(position, data, 0, data.Length);
+            return data;
+        }
+
+
     }
 }

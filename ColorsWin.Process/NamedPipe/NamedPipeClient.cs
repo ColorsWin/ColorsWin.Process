@@ -1,6 +1,6 @@
 ﻿
+using ColorsWin.Process.Helpers;
 using System;
-using System.IO;
 using System.IO.Pipes;
 
 namespace ColorsWin.Process.NamedPipe
@@ -26,31 +26,44 @@ namespace ColorsWin.Process.NamedPipe
             pipeClient = new NamedPipeClientStream(serverName, pipName, PipeDirection.InOut);
         }
 
-        public bool SendMessage(string message)
+        public bool SendData(byte[] message)
         {
             if (!pipeClient.IsConnected)
             {
                 pipeClient.Connect(10000);
             }
-            var sw = new StreamWriter(pipeClient);
-            sw.WriteLine(message);
+            StringStreamHelper.WriteData(pipeClient, message,false);
+            pipeClient.Flush();
 
-            try
+            //if (NamedPipeMessage.Wait)
+            //{
+            //    //等待服务器响应才能继续发送 
+            //    var streamReader = new StreamReader(pipeClient);
+            //    string returnVal = streamReader.ReadToEnd();//等待服务端返回
+            //    return returnVal == NamedPipeMessage.ReplyMessageFlat ;
+            //}
+
+            return true;
+        }
+
+        public bool SendMessage(string message)
+        {
+            var data = System.Text.Encoding.UTF8.GetBytes(message);
+            if (!pipeClient.IsConnected)
             {
-                sw.Flush();
+                pipeClient.Connect(10000);
             }
-            catch (Exception ex)
-            {
-                Helpers.LogHelper.Error(ex.Message);      
-                throw ex;
-            }
-            if (NamedPipeMessage.Wait)
-            {
-                //等待服务器响应才能继续发送 
-                var streamReader = new StreamReader(pipeClient);
-                string returnVal = streamReader.ReadToEnd();
-                return returnVal == NamedPipeMessage.ReplyMessageFlat + message;
-            }
+            StringStreamHelper.WriteData(pipeClient, data, true);
+            pipeClient.Flush();
+
+            //if (NamedPipeMessage.Wait)
+            //{
+            //    //等待服务器响应才能继续发送 
+            //    var streamReader = new StreamReader(pipeClient);
+            //    string returnVal = streamReader.ReadToEnd();//等待服务端返回
+            //    return returnVal == NamedPipeMessage.ReplyMessageFlat ;
+            //}
+
             return true;
         }
 

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ColorsWin.Process
+﻿namespace ColorsWin.Process
 {
     /// <summary>
     /// 进程消息类型

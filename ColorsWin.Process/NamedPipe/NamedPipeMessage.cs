@@ -16,7 +16,8 @@ namespace ColorsWin.Process.NamedPipe
         /// <summary>
         /// wait=true,收到消息后回复
         /// </summary>
-        public static string ReplyMessageFlat = "&&Reply&&";
+        public const string ReplyMessageFlat = "&&Reply&&";
+
         /// <summary>
         /// 进程名称
         /// </summary>
@@ -25,10 +26,13 @@ namespace ColorsWin.Process.NamedPipe
 
         //标识符防止重复 
         private const string ProcessKeyTag = "_NamedPipe_ColorsWin";
+
         private NamedPipeClient client;
         private NamedPipeListenServer server;
 
         public event Action<string> AcceptMessage;
+
+        public event Action<byte[]> AcceptData;
 
         public NamedPipeMessage(string processName, bool read)
         {
@@ -37,6 +41,14 @@ namespace ColorsWin.Process.NamedPipe
 
         }
 
+
+        public void OnAcceptData(byte[] data)
+        {
+            if (AcceptData != null)
+            {
+                AcceptData(data);
+            }
+        }
         public void OnAcceptMessage(string message)
         {
             if (AcceptMessage != null)
@@ -44,8 +56,11 @@ namespace ColorsWin.Process.NamedPipe
                 AcceptMessage(message);
             }
         }
-
         public string ReadMessage()
+        {
+            return null;
+        }
+        public byte[] ReadData()
         {
             return null;
         }
@@ -58,12 +73,17 @@ namespace ColorsWin.Process.NamedPipe
         {
             return client.SendMessage(message);
         }
+        public bool SendData(byte[] message)
+        {
+            return client.SendData(message);
+        }
+
 
         internal void Init(bool read)
         {
             if (read)
             {
-                server = new NamedPipeListenServer(ProcessKeyTag + ProcessKey, OnAcceptMessage);
+                server = new NamedPipeListenServer(ProcessKeyTag + ProcessKey, OnAcceptData, OnAcceptMessage);
                 Task.Factory.StartNew(() =>
                 {
                     server.Run();
@@ -74,5 +94,7 @@ namespace ColorsWin.Process.NamedPipe
                 client = new NamedPipeClient(".", ProcessKeyTag + ProcessKey);
             }
         }
+
+
     }
 }

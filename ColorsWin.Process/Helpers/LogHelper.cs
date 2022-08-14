@@ -1,18 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
+﻿using System.Diagnostics;
 
 namespace ColorsWin.Process.Helpers
 {
     public class LogHelper
     {
+        /// <summary>
+        /// 调试错误信息
+        /// </summary>
+        /// <param name="message"></param>
         public static void Error(string message)
         {
             Trace.WriteLine(message);
         }
 
-        public static void WriteLine(string message)
+        public static void Debug(string message)
         {
             //方式一
 
@@ -27,7 +28,8 @@ namespace ColorsWin.Process.Helpers
             //#endif
 
             //Trace.WriteLine(message);
-            Debug.WriteLine(message);
+
+            System.Diagnostics.Debug.WriteLine(message);
         }
 
 

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO.MemoryMappedFiles;
-using System.Linq;
-using System.Text;
+﻿using System.Security.AccessControl;
+using System.Security.Principal;
 using System.Threading;
 
 
@@ -13,19 +10,7 @@ namespace ColorsWin.Process.Helpers
     /// </summary>
     public class EventWaitHandleHelper
     {
-        public static EventWaitHandle OpenEventHande(string eventName)
-        {
-            EventWaitHandle handle = null;
-            try
-            {
-                handle = EventWaitHandle.OpenExisting(eventName);
-            }
-            catch (WaitHandleCannotBeOpenedException)
-            {
 
-            }
-            return handle;
-        }
         /// <summary>
         /// 
         /// </summary>
@@ -38,12 +23,39 @@ namespace ColorsWin.Process.Helpers
             {
                 handle = new EventWaitHandle(read, EventResetMode.ManualReset, eventName);
             }
-            catch (WaitHandleCannotBeOpenedException)
+            catch (WaitHandleCannotBeOpenedException ex)
             {
-
+                throw ex;
             }
             return handle;
         }
+        private static void SetAccessControl(EventWaitHandle handle)
+        {
+#if NET40
+            var sid = new SecurityIdentifier(WellKnownSidType.WorldSid, null);
+            var rule = new EventWaitHandleAccessRule(sid, EventWaitHandleRights.FullControl, AccessControlType.Allow);
+            //var rule = new EventWaitHandleAccessRule("Everyone", EventWaitHandleRights.FullControl, AccessControlType.Allow);
+            EventWaitHandleSecurity security = new EventWaitHandleSecurity();
+            security.AddAccessRule(rule);
+            handle.SetAccessControl(security);
+#endif
+        }
+
+        public static EventWaitHandle OpenEventHande(string eventName)
+        {
+            EventWaitHandle handle = null;
+            try
+            {
+                handle = EventWaitHandle.OpenExisting(eventName);
+            }
+            catch (WaitHandleCannotBeOpenedException ex)
+            {
+                //LogHelper.Error();
+                throw ex;
+            }
+            return handle;
+        }
+
         /// <summary>
         /// 打开或者创建
         /// </summary>

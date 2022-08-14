@@ -1,5 +1,7 @@
 ﻿using ColorsWin.Process;
 using System;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Process.ShareTest
 {
@@ -8,13 +10,14 @@ namespace Process.ShareTest
         private static bool IsRun()
         {
             var defaultKey = AppDomain.CurrentDomain.FriendlyName;
-            var defaultData = ProcessMessageManager.ReadData(defaultKey);
-            bool write = string.IsNullOrEmpty(defaultData);
-            if (write)
+            defaultKey = "processKey_MemoryShare";
+            var defaultData = ProcessMessageManager.ReadMessage(defaultKey);
+            bool isRun = !string.IsNullOrEmpty(defaultData);
+            if (!isRun)
             {
-                ProcessMessageManager.WriteData(defaultKey, "已经在运行");
+                ProcessMessageManager.SendMessage(defaultKey, "开始运行");
             }
-            return write;
+            return isRun;
         }
 
         public static void OutPut()
@@ -27,7 +30,7 @@ namespace Process.ShareTest
                 string tempData = Console.ReadLine();
                 while (tempData != "exit")
                 {
-                    ProcessMessageManager.WriteData(processKey, tempData);
+                    ProcessMessageManager.SendMessage(processKey, tempData);
                     Console.WriteLine("写入内存数据:" + tempData);
                     tempData = Console.ReadLine();
                 }
@@ -35,9 +38,9 @@ namespace Process.ShareTest
             else
             {
                 Console.WriteLine("当前程序将作为服务端,监听消息已经启动------:当前key为" + processKey);
-                ProcessMessageManager.ListenMessage(processKey, (item) =>
+                ProcessMessageManager.AcceptMessage(processKey, (item) =>
                 {
-                    Console.WriteLine(processKey + "监听--------" + item);
+                    Console.WriteLine(processKey + "监听--------" + string.Join("####", item));
                 });
             }
         }
@@ -54,12 +57,12 @@ namespace Process.ShareTest
             };
 
 
-            ProcessMessageManager.ListenMessage(processKey, (item) =>
+            ProcessMessageManager.AcceptMessage(processKey, (item) =>
             {
                 Console.WriteLine(processKey + "监听--------" + item);
             });
 
-            ProcessMessageManager.ListenMessage(processKey, (item) =>
+            ProcessMessageManager.AcceptMessage(processKey, (item) =>
             {
                 Console.WriteLine(processKey + "监听[第二次]---------" + item);
             });
@@ -70,14 +73,14 @@ namespace Process.ShareTest
             //}, true);
 
 
-            ProcessMessageManager.ListenMessage(processKey2, (item) =>
+            ProcessMessageManager.AcceptMessage(processKey2, (item) =>
             {
                 Console.WriteLine(processKey2 + "监听--------" + item);
             });
 
-            ProcessMessageManager.WriteData(processKey, " 你好 进程1");
+            ProcessMessageManager.SendMessage(processKey, " 你好 进程1");
 
-            ProcessMessageManager.WriteData(processKey2, " 我是进程2");
+            ProcessMessageManager.SendMessage(processKey2, " 我是进程2");
         }
     }
 }
