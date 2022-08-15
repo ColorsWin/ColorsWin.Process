@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Linq;
 using System.Security.AccessControl;
+using System.Security.Principal;
 using System.Text;
 
 namespace ProcessDemo
@@ -12,7 +13,11 @@ namespace ProcessDemo
     {
         public static void Output()
         {
-             // Not Admin  Run Error
+            var user = System.Environment.UserName;
+
+            return;
+
+            // Not Admin  Run Error
 
             var security = new MemoryMappedFileSecurity();
             security.AddAccessRule(new AccessRule<MemoryMappedFileRights>(
@@ -27,6 +32,6 @@ namespace ProcessDemo
                                         security,
                                         HandleInheritability.Inheritable);
         }
-        
+
     }
 }

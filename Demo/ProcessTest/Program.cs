@@ -7,7 +7,7 @@ namespace ProcessDemo
     {
         static void Main(string[] args)
         {
-            //OtherTest.Output();
+            OtherTest.Output();
             TestMemoryShare.OutPut();
             // TestFile.OutPut();
             // TestNamedPipe.OutPut();

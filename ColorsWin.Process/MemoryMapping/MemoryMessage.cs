@@ -1,6 +1,5 @@
 ﻿using ColorsWin.Process.Helpers;
 using System;
-using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,16 +12,8 @@ namespace ColorsWin.Process
         private const string MemoryMappedFileNameTag = "_MemoryMappedFileName_ColorsWin";
         private const string EventWaitNameTag = "_EventWaitName_ColorsWin";
         private string processKey = "eventWaitName";
-        /// <summary>
-        /// 判断是否以管理员权限运行本程序
-        /// </summary>
-        /// <returns></returns>
-        public static bool IsRunAsAdmin()
-        {
-            var id = WindowsIdentity.GetCurrent();
-            var principal = new WindowsPrincipal(id);
-            return principal.IsInRole(WindowsBuiltInRole.Administrator);
-        }
+
+
 
         public MemoryMessage(string processName, bool read)
         {
@@ -32,7 +23,7 @@ namespace ColorsWin.Process
 
         private string GetProcessKey(string appendTag = null)
         {
-            bool isAdmmin = IsRunAsAdmin();
+            bool isAdmmin = ProcessHelper.IsRunAsAdmin();
             var tag = ProcessMessageConfig.GlobalTag;
             if (!isAdmmin)
             {
@@ -42,10 +33,9 @@ namespace ColorsWin.Process
         }
 
         private void Init(bool read)
-        { 
+        {
             memoryFile = MemoryMappedFileHelper.CreateMemoryMappedFileObj(GetProcessKey(MemoryMappedFileNameTag));
             eventWait = EventWaitHandleHelper.CreateEventHande(GetProcessKey(EventWaitNameTag), false);
-
             if (read)
             {
                 Task.Factory.StartNew(WaitForMessage);
