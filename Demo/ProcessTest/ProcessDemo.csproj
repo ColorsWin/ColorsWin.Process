@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{2A23F9EE-81D7-4D54-84B0-59DCA9D13AFB}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>ProcessTest</RootNamespace>
-    <AssemblyName>ProcessTest</AssemblyName>
+    <RootNamespace>ProcessDemo</RootNamespace>
+    <AssemblyName>ProcessDemo</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OtherTest.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

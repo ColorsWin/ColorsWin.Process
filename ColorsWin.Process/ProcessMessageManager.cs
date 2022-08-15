@@ -1,28 +1,28 @@
-﻿using ColorsWin.Process.Ext;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace ColorsWin.Process
 {
-    /// <summary>
-    /// 进程消息管理
-    /// </summary>
+
     public class ProcessMessageManager
     {
         private static Dictionary<string, ProcessMessageProxy> allProcessMessage;
-
-        /// <summary>
-        /// 收到所有进程消息事件 
-        /// </summary>
         public static event Action<string, string> AllMessageEvent;
-
 
         static ProcessMessageManager()
         {
             allProcessMessage = new Dictionary<string, ProcessMessageProxy>();
         }
 
+        public static ProcessMessageType GetProcessMessageType(string processKey)
+        {
+            if (allProcessMessage.ContainsKey(processKey))
+            {
+                return allProcessMessage[processKey].GetProcessMessageType();
+            }
+            return ProcessMessageType.None;
+        }
 
         /// <summary>
         /// 接受进程消息
@@ -201,7 +201,7 @@ namespace ColorsWin.Process
         }
         #endregion
 
-        #region 已过期方法
+        #region Obsolete Methord
 
         private static ProcessMessageType processMessageType = ProcessMessageType.ShareMemory;
 

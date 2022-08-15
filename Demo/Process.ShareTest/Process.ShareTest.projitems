@@ -9,6 +9,8 @@
     <Import_RootNamespace>Process.ShareTest</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)BaseTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestFile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestMemoryShare.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestNamedPipe.cs" />
   </ItemGroup>

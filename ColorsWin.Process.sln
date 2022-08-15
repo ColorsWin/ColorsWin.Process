@@ -5,11 +5,11 @@ VisualStudioVersion = 16.0.30105.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ColorsWin.Process", "ColorsWin.Process\ColorsWin.Process.csproj", "{1615F575-EC4E-4B35-BD83-8DFC36A13EE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessTest", "Demo\ProcessTest\ProcessTest.csproj", "{2A23F9EE-81D7-4D54-84B0-59DCA9D13AFB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessDemo", "Demo\ProcessTest\ProcessDemo.csproj", "{2A23F9EE-81D7-4D54-84B0-59DCA9D13AFB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo", "Demo", "{5B581A72-342B-4901-B3BD-7539148DFE49}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProcessCoreTest", "Demo\ProcessCoreTest\ProcessCoreTest.csproj", "{10915871-0715-4BF0-BFF2-BC85B48EF88D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProcessCoreDemo", "Demo\ProcessCoreTest\ProcessCoreDemo.csproj", "{10915871-0715-4BF0-BFF2-BC85B48EF88D}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Process.ShareTest", "Demo\Process.ShareTest\Process.ShareTest.shproj", "{1FA698A0-BAC5-4798-94F6-37AA4B4A9922}"
 EndProject

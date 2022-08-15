@@ -5,54 +5,23 @@ namespace Process.ShareTest
 {
     public class TestMemoryShare
     {
-        private static bool IsRun()
+        private static bool HadRun(string processKey)
         {
-            var defaultKey = AppDomain.CurrentDomain.FriendlyName;
-            defaultKey = "processKey_MemoryShare";
-            var defaultData = ProcessMessageManager.ReadMessage(defaultKey);
+            var defaultData = ProcessMessageManager.ReadMessage(processKey);
             bool isRun = !string.IsNullOrEmpty(defaultData);
             if (!isRun)
             {
-                ProcessMessageManager.SendMessage(defaultKey, "开始运行");
+                ProcessMessageManager.SendMessage(processKey, "Runing");
             }
             return isRun;
         }
 
         public static void OutPut()
         {
-            var processKey = "processKey_MemoryShare";
-            bool write = IsRun();
-            if (write)
-            {
-                Console.WriteLine("当前程序将作为发送端: 当前key为" + processKey);
-                string tempData = Console.ReadLine();
-                while (tempData != "exit")
-                {
-                    ProcessMessageManager.SendMessage(processKey, tempData);
-                    Console.WriteLine("写入内存数据:" + tempData);
-
-                    var data = System.Text.Encoding.Default.GetBytes(tempData);
-                    ProcessMessageManager.SendData(processKey, data);
-
-                    tempData = Console.ReadLine();
-                }
-            }
-            else
-            {
-                Console.WriteLine("当前程序将作为服务端,------:当前key为" + processKey);
-                ProcessMessageManager.AcceptMessage(processKey, (item) =>
-                {
-                    Console.WriteLine(processKey + "：AcceptMessage--------" + string.Join("####", item));
-                });
-
-                ProcessMessageManager.AcceptData(processKey, (item) =>
-                {
-                    var data = System.Text.Encoding.Default.GetString(item);
-                    Console.WriteLine(processKey + "：AcceptData:--------" + data);
-                });
-            }
+            HadRun("TestProcess_Key");
+            //BaseTest.TestSend();
+            BaseTest.TestBatchSend();
         }
-
 
         public static void BaseOutput()
         {

@@ -1,7 +1,7 @@
 ﻿using Process.ShareTest;
 using System;
 
-namespace ProcessCoreTest
+namespace ProcessCoreDemo
 {
     class Program
     {

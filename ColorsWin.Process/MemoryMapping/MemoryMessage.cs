@@ -1,13 +1,11 @@
 ﻿using ColorsWin.Process.Helpers;
 using System;
+using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace ColorsWin.Process
 {
-    /// <summary>
-    /// 进程消息操作对象
-    /// </summary>
     class MemoryMessage : IProcessMessage
     {
         private EventWaitHandle eventWait = null;
@@ -15,7 +13,16 @@ namespace ColorsWin.Process
         private const string MemoryMappedFileNameTag = "_MemoryMappedFileName_ColorsWin";
         private const string EventWaitNameTag = "_EventWaitName_ColorsWin";
         private string processKey = "eventWaitName";
-
+        /// <summary>
+        /// 判断是否以管理员权限运行本程序
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsRunAsAdmin()
+        {
+            var id = WindowsIdentity.GetCurrent();
+            var principal = new WindowsPrincipal(id);
+            return principal.IsInRole(WindowsBuiltInRole.Administrator);
+        }
 
         public MemoryMessage(string processName, bool read)
         {
@@ -23,22 +30,28 @@ namespace ColorsWin.Process
             Init(read);
         }
 
-        /// <summary>
-        /// 初始化通知和内存共享文件
-        /// </summary>
-        private void Init(bool read)
+        private string GetProcessKey(string appendTag = null)
         {
-            memoryFile = MemoryMappedFileHelper.CreateMemoryMappedFileObj("Global\\" + processKey + MemoryMappedFileNameTag);
-            eventWait = EventWaitHandleHelper.CreateEventHande("Global\\" + processKey + EventWaitNameTag, false);
+            bool isAdmmin = IsRunAsAdmin();
+            var tag = ProcessMessageConfig.GlobalTag;
+            if (!isAdmmin)
+            {
+                tag = "";
+            }
+            return tag + processKey + appendTag;
+        }
+
+        private void Init(bool read)
+        { 
+            memoryFile = MemoryMappedFileHelper.CreateMemoryMappedFileObj(GetProcessKey(MemoryMappedFileNameTag));
+            eventWait = EventWaitHandleHelper.CreateEventHande(GetProcessKey(EventWaitNameTag), false);
+
             if (read)
             {
                 Task.Factory.StartNew(WaitForMessage);
             }
         }
 
-        /// <summary>
-        /// 一直等待消息
-        /// </summary>
         private void WaitForMessage()
         {
             while (true)
@@ -60,22 +73,15 @@ namespace ColorsWin.Process
                         AcceptData(data);
                     }
                 }
-
                 eventWait.Reset();
             }
         }
 
-
-
-        #region 接口实现
+        #region IProcessMessage
 
         public event Action<string> AcceptMessage;
         public event Action<byte[]> AcceptData;
 
-        /// <summary>
-        /// 内存读取数据
-        /// </summary>
-        /// <returns></returns>
         public string ReadMessage()
         {
             var data = ReadData();
@@ -86,17 +92,13 @@ namespace ColorsWin.Process
             return System.Text.Encoding.Default.GetString(data);
         }
 
-        /// <summary>
-        /// 进程发送消息
-        /// </summary>
-        /// <returns></returns>
+
         public bool SendMessage(string message)
         {
             var data = System.Text.Encoding.Default.GetBytes(message);
             memoryFile.IsString = true;
             return SendData(data);
         }
-
 
         public bool SendData(byte[] message)
         {
@@ -105,10 +107,9 @@ namespace ColorsWin.Process
             if (eventWait != null)
             {
                 eventWait.Set();
-
                 //暂时未处理 批量快速发消息 会导致接受不全【写入速度过快，读取速度跟不上】
 
-                Thread.Sleep(10);
+                Thread.Sleep(ProcessMessageConfig.BatchSendWaitTime);
 
                 eventWait.Reset();//如果注释掉这句代码   A先发送消息,B在运行程序也会收到
                 return true;

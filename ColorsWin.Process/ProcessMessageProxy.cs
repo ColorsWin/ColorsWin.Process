@@ -1,11 +1,8 @@
 ﻿using ColorsWin.Process.NamedPipe;
 using System;
 
-namespace ColorsWin.Process.Ext
+namespace ColorsWin.Process
 {
-    /// <summary>
-    /// 进程读写消息代理
-    /// </summary>
     public class ProcessMessageProxy
     {
         private IProcessMessage acceptMessage;
@@ -69,10 +66,7 @@ namespace ColorsWin.Process.Ext
             return acceptMessage.ReadMessage();
         }
 
-        /// <summary>
-        /// 收到消息内容
-        /// </summary>
-        /// <param name="message"></param>
+
         protected virtual void OnMessage(string message)
         {
             if (message == null)
@@ -86,10 +80,6 @@ namespace ColorsWin.Process.Ext
             }
         }
 
-        /// <summary>
-        /// 初始进程信息
-        /// </summary>
-        /// <param name="read"> true创建读取信息，false创建写入</param>
         private void InitProcessMessage(bool read)
         {
             switch (processMessageType)
@@ -97,18 +87,22 @@ namespace ColorsWin.Process.Ext
                 case ProcessMessageType.ShareMemory:
                     CreateShareMemoryMessage(read);
                     break;
+
                 case ProcessMessageType.NamedPipe:
                     CreateNamedPipeMessage(read);
                     break;
-                default:
+
+                case ProcessMessageType.File:
+                    CreateFileMessage(read);
                     break;
+
+                default:
+                    throw new NotImplementedException();
+
             }
         }
 
-        /// <summary>
-        /// 创建内存消息
-        /// </summary>
-        /// <param name="read"></param>
+
         private void CreateShareMemoryMessage(bool read)
         {
             if (read)
@@ -135,10 +129,7 @@ namespace ColorsWin.Process.Ext
             }
         }
 
-        /// <summary>
-        /// 创建命名管道
-        /// </summary>
-        /// <param name="read"></param>
+
         private void CreateNamedPipeMessage(bool read)
         {
             if (read)
@@ -166,9 +157,32 @@ namespace ColorsWin.Process.Ext
         }
 
 
-        /// <summary>
-        /// 改变接受消息
-        /// </summary>
+        private void CreateFileMessage(bool read)
+        {
+            if (read)
+            {
+                if (acceptMessage == null)
+                {
+                    acceptMessage = new FileMessage(processKey, read);
+                    acceptMessage.AcceptMessage += OnMessage;
+                    acceptMessage.AcceptData += (data) =>
+                    {
+                        if (actionData != null)
+                        {
+                            actionData(data);
+                        }
+                    };
+                }
+            }
+            else
+            {
+                if (sendMessage == null)
+                {
+                    sendMessage = new FileMessage(processKey, read);
+                }
+            }
+        }
+
         public void ChangeAction(Action<string> actionMessage, bool reset)
         {
             if (reset || this.actionMessage == null)
@@ -181,11 +195,7 @@ namespace ColorsWin.Process.Ext
             }
         }
 
-        /// <summary>
-        /// 改变接受消息
-        /// </summary>
-        /// <param name="actionData"></param>
-        /// <param name="reset"></param>
+
         public void ChangeAction(Action<byte[]> actionData, bool reset)
         {
             if (reset || this.actionData == null)
@@ -198,9 +208,7 @@ namespace ColorsWin.Process.Ext
             }
         }
 
-        /// <summary>
-        /// 停止
-        /// </summary>
+
         public void Stop(ProxyType type = ProxyType.All)
         {
             if (type == ProxyType.All || type == ProxyType.Read)
@@ -213,10 +221,6 @@ namespace ColorsWin.Process.Ext
             }
         }
 
-        /// <summary>
-        /// 获取代理消息类型，读或者写
-        /// </summary>
-        /// <returns></returns>
         public ProxyType GetProxyType()
         {
             if (acceptMessage == null || sendMessage == null)
@@ -236,11 +240,14 @@ namespace ColorsWin.Process.Ext
                 return ProxyType.Write;
             }
         }
+
+        public ProcessMessageType GetProcessMessageType()
+        {
+            return processMessageType;
+        }
     }
 
-    /// <summary>
-    /// 代理消息类型
-    /// </summary>
+
     public enum ProxyType
     {
         None,

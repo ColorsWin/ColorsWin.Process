@@ -5,12 +5,9 @@ using System.Text;
 
 namespace ColorsWin.Process.Helpers
 {
-    /// <summary>
-    /// 流和字符串数组     
-    /// </summary>
+
     public class StringStreamHelper
     {
-      
         public static void WriteData(Stream stream, byte[] data, bool isString = false)
         {
             byte flag = (byte)(isString ? 1 : 0);
@@ -20,7 +17,7 @@ namespace ColorsWin.Process.Helpers
             stream.Write(headerData, 0, headerData.Length);
             stream.Write(data, 0, data.Length);
         }
-    
+
         public static byte[] ReadData(Stream stream, out bool isString)
         {
             var flag = stream.ReadByte();
@@ -42,7 +39,7 @@ namespace ColorsWin.Process.Helpers
 
         // 前面4个字节存储数组个数N, N里面每一个占用4个字节存储每个字符串字节大小
 
-      
+
         public static void OwnerWriteData(Stream stream, params string[] dataInfo)
         {
             var dataLength = BitConverter.GetBytes(dataInfo.Length);
@@ -65,7 +62,7 @@ namespace ColorsWin.Process.Helpers
         }
 
 
-       
+
         public static string[] OwnerReadData(Stream stream)
         {
             var dataLength = new byte[4];

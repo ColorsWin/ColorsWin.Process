@@ -1,20 +1,16 @@
-﻿using ColorsWin.Process.Helpers;
-using Process.ShareTest;
+﻿using Process.ShareTest;
 using System;
 
-namespace ProcessTest
+namespace ProcessDemo
 {
     class Program
     {
         static void Main(string[] args)
         {
-            //var obj = ByteConvertHelper.Object2Bytes(new string[] { "1\n2323213" });
-            //var t = ByteConvertHelper.Bytes2Object<string[]>(obj);
-
+            //OtherTest.Output();
             TestMemoryShare.OutPut();
-
-            //TestNamedPipe.OutPutProcessData();
-
+            // TestFile.OutPut();
+            // TestNamedPipe.OutPut();
             Console.Read();
         }
     }
