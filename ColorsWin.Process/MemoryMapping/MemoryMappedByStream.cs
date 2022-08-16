@@ -3,9 +3,7 @@ using System.IO.MemoryMappedFiles;
 
 namespace ColorsWin.Process
 {
-    /// <summary>
-    /// 共享内存文件数据
-    /// </summary>
+   
     public class MemoryMappedByStream : MemoryMappedFileObj
     {
         private MemoryMappedViewStream viewStream = null;
@@ -14,11 +12,8 @@ namespace ColorsWin.Process
         {
             viewStream = file.CreateViewStream();
         }
-
-        /// <summary>
-        /// 写入数据
-        /// </summary>
-        /// <param name="dataInfo"></param>
+        
+       
         public override void WriteData(byte[] data)
         {
             viewStream.Position = 0;

@@ -4,8 +4,7 @@ using System;
 using System.Security.Principal;
 
 namespace ColorsWin.Process
-{
-  
+{  
     public class ProcessHelper
     {
         private const int SW_SHOWNOMAL = 1;

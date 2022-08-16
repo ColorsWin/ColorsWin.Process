@@ -35,11 +35,9 @@ namespace ColorsWin.Process.Helpers
             return contentData;
         }
 
-
-        #region 自定义格式
+        #region Owner Format
 
         // 前面4个字节存储数组个数N, N里面每一个占用4个字节存储每个字符串字节大小
-
 
         public static void OwnerWriteData(Stream stream, params string[] dataInfo)
         {
@@ -61,8 +59,6 @@ namespace ColorsWin.Process.Helpers
                 stream.Write(data, 0, data.Length);
             }
         }
-
-
 
         public static string[] OwnerReadData(Stream stream)
         {

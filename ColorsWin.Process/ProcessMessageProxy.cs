@@ -199,7 +199,6 @@ namespace ColorsWin.Process
             }
         }
 
-
         private void CreateFileMessage(bool read)
         {
             if (read)
@@ -226,8 +225,6 @@ namespace ColorsWin.Process
             }
         }
 
-
-
         public ProxyType GetProxyType()
         {
             if (acceptMessage == null || sendMessage == null)
@@ -247,8 +244,6 @@ namespace ColorsWin.Process
                 return ProxyType.Write;
             }
         }
-
-
     }
 
 

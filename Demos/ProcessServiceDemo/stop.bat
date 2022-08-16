@@ -1,0 +1,2 @@
+net stop ProcessServiceDemo
+sc delete ProcessServiceDemo

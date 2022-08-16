@@ -2,9 +2,7 @@
 
 namespace ColorsWin.Process
 {
-    /// <summary>
-    /// 通过视图
-    /// </summary>
+   
     public class MemoryMappedByAccessor : MemoryMappedFileObj
     {
         private MemoryMappedViewAccessor viewAccessor = null;

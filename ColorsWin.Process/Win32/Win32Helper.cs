@@ -7,11 +7,7 @@ namespace ColorsWin.Process.Win32
     public class Win32Helper
     {
         #region User32
-        /// <summary>
-        /// 窗体获得焦点
-        /// </summary>
-        /// <param name="hWnd"></param>
-        /// <returns></returns>
+
         [DllImport("User32.dll")]
         public static extern bool SetForegroundWindow(IntPtr hWnd);
 

@@ -4,19 +4,10 @@ using System.Collections.Generic;
 
 namespace ColorsWin.Process.NamedPipe
 {
-    /// <summary>
-    /// 进程消息操作对象
-    /// </summary>
-    internal class NamedPipeMessage : IProcessMessage
+    class NamedPipeMessage : IProcessMessage
     {
-        /// <summary>
-        /// 是否等待回应以后才能继续发送第二条消息
-        /// </summary>
         public static bool Wait { get; set; } = false;
 
-        /// <summary>
-        /// wait=true,收到消息后回复
-        /// </summary>
         public const string ReplyMessageFlat = "&&Reply&&";
 
 
@@ -49,10 +40,6 @@ namespace ColorsWin.Process.NamedPipe
 
         public void OnAcceptMessage(string message)
         {
-            //if (message)
-            //{
-
-            //}
             if (AcceptMessage != null)
             {
                 AcceptMessage(message);
@@ -65,7 +52,8 @@ namespace ColorsWin.Process.NamedPipe
             {
                 return allProcessMessageCache[processKey];
             }
-            //get message from other Process
+
+            //To Do: get message from other Process
 
             return null;
         }
@@ -96,10 +84,6 @@ namespace ColorsWin.Process.NamedPipe
         {
             if (read)
             {
-                //if (server != null)
-                //{
-                //    return;
-                //}
                 server = new NamedPipeListenServer(ProcessKeyTag + processKey, OnAcceptData, OnAcceptMessage);
                 Task.Factory.StartNew(() =>
                 {
@@ -108,10 +92,6 @@ namespace ColorsWin.Process.NamedPipe
             }
             else
             {
-                //if (client != null)
-                //{
-                //    return;
-                //}
                 client = new NamedPipeClient(".", ProcessKeyTag + processKey);
             }
         }

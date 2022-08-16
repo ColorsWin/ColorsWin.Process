@@ -2,20 +2,11 @@
 using System.Security.Principal;
 using System.Threading;
 
-
 namespace ColorsWin.Process.Helpers
-{
-    /// <summary>
-    /// 互斥信号量
-    /// </summary>
+{   
     public class EventWaitHandleHelper
     {
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="eventName"></param>
-        /// <returns></returns>
+      
         public static EventWaitHandle CreateEventHande(string eventName, bool read = false)
         {
             EventWaitHandle handle = null;
@@ -56,11 +47,7 @@ namespace ColorsWin.Process.Helpers
             return handle;
         }
 
-        /// <summary>
-        /// 打开或者创建
-        /// </summary>
-        /// <param name="eventName"></param>
-        /// <returns></returns>
+     
         public static EventWaitHandle OpenOrCreateEventHande(string eventName)
         {
             var handle = OpenEventHande(eventName);

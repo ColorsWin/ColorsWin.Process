@@ -134,43 +134,5 @@ namespace ColorsWin.Process
 
         #endregion
 
-
-        #region Obsolete Methord
-
-        private static ProcessMessageType processMessageType = ProcessMessageType.ShareMemory;
-
-        /// <summary>
-        /// 初始化消息类型
-        /// </summary>
-        /// <param name="processType"></param>
-        [Obsolete("该方法已过期,修改无效，请使用ProcessMessageConfig.ProcessMessageType")]
-        public static void Init(ProcessMessageType processType)
-        {
-            processMessageType = processType;
-        }
-
-        /// <summary>
-        /// 监听进程消息
-        /// </summary>
-        /// <param name="processKey"></param>
-        /// <param name="messageAction"></param>
-        /// <param name="resetAction">是否重置接受方法 为true时候之前都不在接受</param>
-        [Obsolete("该方法已过期，请使用AcceptMessage")]
-        public static void ListenMessage(string processKey, Action<string> messageAction, bool resetAction = false)
-        {
-            AcceptMessage(processKey, messageAction, resetAction);
-        }
-
-        /// <summary>
-        /// 像进程发送消息
-        /// </summary>
-        /// <param name="message"></param>
-        /// <returns></returns>
-        [Obsolete("该方法已过期，请使用SendMessage")]
-        public static bool WriteData(string processKey, string message)
-        {
-            return SendMessage(processKey, message);
-        }
-        #endregion
     }
 }

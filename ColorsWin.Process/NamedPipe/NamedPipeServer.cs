@@ -7,13 +7,10 @@ using System.Threading.Tasks;
 
 namespace ColorsWin.Process.NamedPipe
 {
-    /// <summary>
-    /// 管道服务信息
-    /// </summary>
     class NamedPipeListenServer
     {
         private List<NamedPipeServerStream> serverPool = new List<NamedPipeServerStream>();
-        private string pipName = "ColorsWinpipName";
+        private string pipName = "ColorsWin.PipName";
         private Action<byte[]> actionData;
         private Action<string> actionMessage;
         public NamedPipeListenServer(string pipName, Action<byte[]> actionData, Action<string> actionMessage)
@@ -28,7 +25,7 @@ namespace ColorsWin.Process.NamedPipe
         {
             var npss = new NamedPipeServerStream(pipName, PipeDirection.InOut, 10);
             serverPool.Add(npss);
-            LogHelper.Debug("创建一个NamedPipeServerStream " + npss.GetHashCode());
+            LogHelper.Debug("Create One NamedPipeServerStream:" + npss.GetHashCode());
             return npss;
         }
 
@@ -40,7 +37,7 @@ namespace ColorsWin.Process.NamedPipe
             {
                 serverPool.Remove(npss);
             }
-            LogHelper.Debug("销毁一个NamedPipeServerStream " + npss.GetHashCode());
+            LogHelper.Debug("Distroy One NamedPipeServerStream: " + npss.GetHashCode());
         }
 
         public void Run()
@@ -49,9 +46,12 @@ namespace ColorsWin.Process.NamedPipe
             {
                 pipeServer.WaitForConnection();
 
-                LogHelper.Debug("建立一个连接" + pipeServer.GetHashCode());
+                LogHelper.Debug("Create One Connection" + pipeServer.GetHashCode());
 
-                Task.Factory.StartNew(Run);//new Action(Run).BeginInvoke(null, null);//dotnetCore支持有问题
+                //new Action(Run).BeginInvoke(null, null);//dotnetCore Run Error
+
+                Task.Factory.StartNew(Run);
+
                 try
                 {
                     bool isRun = true;
@@ -97,14 +97,9 @@ namespace ColorsWin.Process.NamedPipe
                     DistroyObject(pipeServer);
                 }
             }
-        }
+        } 
 
-
-        /// <summary>
-        /// 处理消息【返回接受成功，客户端才能继续发送】
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="pipeServer"></param>
+      
         protected virtual void ReplyMessageMessage(string[] message, NamedPipeServerStream pipeServer)
         {
             using (var streamWriter = new StreamWriter(pipeServer))
@@ -133,7 +128,7 @@ namespace ColorsWin.Process.NamedPipe
                     continue;
                 }
                 var data = System.Text.Encoding.UTF8.GetBytes(message);
-                pipeServer.Write(data,0,data.Length);
+                pipeServer.Write(data, 0, data.Length);
                 //using (var streamWriter = new StreamWriter(pipeServer))
                 //{
                 //    streamWriter.AutoFlush = true;

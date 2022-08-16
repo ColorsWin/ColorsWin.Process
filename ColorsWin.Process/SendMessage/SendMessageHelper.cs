@@ -5,18 +5,11 @@ using System.Runtime.InteropServices;
 
 namespace ColorsWin.Process.SendMessage
 {
-    /// <summary>
-    /// 消息发送
-    /// </summary>
+
     public class SendMessageHelper
     {
         private const int WM_COPYDATA = 0x004A;
-        /// <summary>
-        /// 发送消息
-        /// </summary>
-        /// <param name="message">消息内容</param>
-        /// <param name="handle">窗口句柄</param>
-        /// <param name="ownerHandle">当前句柄</param>
+
         public static void SendMessage(string message, int handle, IntPtr ownerHandle = default(IntPtr))
         {
             var WINDOW_HANDLE = handle;
@@ -33,11 +26,6 @@ namespace ColorsWin.Process.SendMessage
             }
         }
 
-        /// <summary>
-        /// 发送消息
-        /// </summary>
-        /// <param name="message">消息内容</param>
-        /// <param name="title">窗口标题</param>
         public static void SendMessage(string message, string title)
         {
             int handle = Win32Helper.FindWindow(null, title);
@@ -47,7 +35,7 @@ namespace ColorsWin.Process.SendMessage
             }
         }
 
-        #region WPF用法
+        #region WPF 
 
         public void WpfListen()
         {
@@ -81,7 +69,7 @@ namespace ColorsWin.Process.SendMessage
 
         #endregion
 
-        #region WinFrom用此方法 
+        #region WinFrom
 
         /* protected override void DefWndProc(ref Message m)
         {
