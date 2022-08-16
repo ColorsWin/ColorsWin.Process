@@ -1,7 +1,7 @@
 
 
 1、安装服务
-   sc create ProcessServiceDemo binpath= "D:\Demos\ProcessServiceDemo\bin\Debug\ProcessServiceDemo.exe" DisplayName= "ColorsWin  Service"  start= auto
+   sc create ProcessServiceDemo binpath= "D:\Demos\ProcessServiceDemo\bin\Debug\ProcessServiceDemo.exe" DisplayName= "ProcessDemo Service"  start= auto
 
 2、卸载服务
   sc delete ProcessServiceDemo

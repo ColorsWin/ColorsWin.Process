@@ -49,14 +49,14 @@ namespace ColorsWin.Process.Test
 #### 进程消息类型:
 |类型       |是否实现          |说明          |
 | -------------|:--------------:|:--------------:|
-|ShareMemory|default| 写入后暂停10毫秒,因为循环写入,导致获取消息来不及处理有丢失， |
-|NamedPipe|√||
-|Message|√||
-|MQ|X||
-|File|X|||
+|ShareMemory|default| 多对多，任意一个发送其他都能收到 |
+|NamedPipe|√|多个发送端,一个接收端|
+|Message|√|需要 IntPtr|
+|File|√|多对多，任意一个发送其他都能收到|
+|MQ|X|||
 
 
 
-#### 其他:如果发现有问题请联系QQ 81867376
+
 
 

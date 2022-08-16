@@ -49,11 +49,12 @@ namespace ColorsWin.Process.Test
 #### ProcessMessageType:
 |Type       |Complete          |Remark          |
 | -------------|:--------------:|:--------------:|
-|ShareMemory|default| every Message wait 10 Millisecond ,Need to optimize |
-|NamedPipe|√|very fast,Like Socket|
-|Message|√||
-|MQ|X|next version|
-|File|X|next version||
+|ShareMemory|default| Many Send , Many Accept |
+|NamedPipe|√|Many Send , One Accept|
+|Message|√|need IntPtr|
+|File|√|Many Send , Many Accept|
+|MQ|X|next version||
+
 
 
 

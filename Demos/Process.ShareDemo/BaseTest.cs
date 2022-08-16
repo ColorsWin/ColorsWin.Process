@@ -10,8 +10,6 @@ namespace Process.ShareTest
             var processKey = "processKey_" + ProcessMessageConfig.ProcessMessageType;
             bool isRun = ProcessHelper.HadRun(processKey);
             isRun = false;
-            //StartAccept(processKey);
-            //StartSend(processKey);
             if (isRun)
             {
                 StartSend(processKey);
@@ -62,11 +60,6 @@ namespace Process.ShareTest
             {
                 ProcessMessageManager.SendMessage(processKey, tempData);
                 Console.WriteLine("SendMessage:" + tempData);
-
-                //var data = System.Text.Encoding.Default.GetBytes(tempData);
-                //ProcessMessageManager.SendData(processKey, data);
-                //Console.WriteLine("SendData:" + tempData);
-
                 tempData = Console.ReadLine();
             }
         }
