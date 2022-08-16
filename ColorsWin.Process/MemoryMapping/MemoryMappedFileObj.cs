@@ -5,9 +5,6 @@ using System.Security.Principal;
 
 namespace ColorsWin.Process
 {
-    /// <summary>
-    /// 内存映射文件
-    /// </summary>
     public abstract class MemoryMappedFileObj
     {
         private long fileSize = 10 * 1024 * 1024;
@@ -48,8 +45,7 @@ namespace ColorsWin.Process
             security.AddAccessRule(rule);
             file.SetAccessControl(security);
 #endif
-        }
-       
+        } 
 
         public virtual void WriteMessage(string message)
         {

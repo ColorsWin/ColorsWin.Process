@@ -5,20 +5,11 @@ using System.IO.Pipes;
 
 namespace ColorsWin.Process.NamedPipe
 {
-    /// <summary>
-    /// 管道客户信息
-    /// </summary>
     class NamedPipeClient : IDisposable
     {
         private string serverName;
         private string pipName;
         private NamedPipeClientStream pipeClient;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="serverName">服务器地址</param>
-        /// <param name="pipName">管道名称</param>
         public NamedPipeClient(string serverName, string pipName)
         {
             this.serverName = serverName;
@@ -32,7 +23,7 @@ namespace ColorsWin.Process.NamedPipe
             {
                 pipeClient.Connect(10000);
             }
-            StringStreamHelper.WriteData(pipeClient, message,false);
+            StringStreamHelper.WriteData(pipeClient, message, false);
             pipeClient.Flush();
 
             //if (NamedPipeMessage.Wait)

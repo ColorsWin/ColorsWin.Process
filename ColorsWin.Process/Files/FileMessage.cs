@@ -38,6 +38,11 @@ namespace ColorsWin.Process
         {
             bool isString;
             var data = GetData(out isString);
+            if (data == null)
+            {
+                return;
+            }
+
             if (isString)
             {
                 if (AcceptMessage != null)

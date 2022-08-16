@@ -12,60 +12,103 @@ namespace ColorsWin.Process
         private Action<string> actionMessage;
         private Action<byte[]> actionData;
 
-        public ProcessMessageProxy(string processName)
+        public ProcessMessageProxy(string processKey)
         {
-            this.processKey = processName;
+            this.processKey = processKey;
             this.processMessageType = ProcessMessageConfig.ProcessMessageType;
         }
 
-        public ProcessMessageProxy(string processName, ProcessMessageType processMessageType = ProcessMessageType.ShareMemory)
+        public ProcessMessageProxy(string processKey, ProcessMessageType processMessageType = ProcessMessageType.ShareMemory)
         {
-            this.processKey = processName;
+            this.processKey = processKey;
             this.processMessageType = processMessageType;
         }
 
-        internal void InitListenMessage()
+        public ProcessMessageType GetProcessMessageType()
         {
-            InitProcessMessage(true);
+            return processMessageType;
         }
-
-        internal void ResetListenMessage()
-        {
-            if (acceptMessage != null)
-            {
-                acceptMessage = null;
-                InitProcessMessage(true);
-            }
-            if (sendMessage != null)
-            {
-                sendMessage = null;
-                InitProcessMessage(false);
-            }
-        }
-
         public bool SendData(byte[] data)
         {
-            InitProcessMessage(false);
+            InitMessageTypee(false);
             return sendMessage.SendData(data);
         }
 
         public byte[] ReadData()
         {
-            InitProcessMessage(true);
+            InitMessageTypee(true);
             return acceptMessage.ReadData();
         }
 
         public bool SendMessage(string message)
         {
-            InitProcessMessage(false);
+            InitMessageTypee(false);
             return sendMessage.SendMessage(message);
         }
+
         public string ReadMessage()
         {
-            InitProcessMessage(true);
+            InitMessageTypee(true);
             return acceptMessage.ReadMessage();
         }
 
+        public void ChangeAction(Action<string> actionMessage, bool reset)
+        {
+            if (reset || this.actionMessage == null)
+            {
+                this.actionMessage = actionMessage;
+            }
+            else
+            {
+                this.actionMessage += actionMessage;
+            }
+        }
+
+
+        public void ChangeAction(Action<byte[]> actionData, bool reset)
+        {
+            if (reset || this.actionData == null)
+            {
+                this.actionData = actionData;
+            }
+            else
+            {
+                this.actionData += actionData;
+            }
+        }
+
+        public void Stop(ProxyType type = ProxyType.All)
+        {
+            if (type == ProxyType.All || type == ProxyType.Read)
+            {
+                acceptMessage = null;
+            }
+            else if (type == ProxyType.All || type == ProxyType.Write)
+            {
+                sendMessage = null;
+            }
+        }
+
+        internal void InitMessage()
+        {
+            InitMessageTypee(true);
+        }
+
+        internal void Reset(ProcessMessageType processMessageType = ProcessMessageType.ShareMemory)
+        {
+            this.processMessageType = processMessageType;
+            if (acceptMessage != null)
+            {
+                acceptMessage = null;
+                InitMessageTypee(true);
+            }
+
+            if (sendMessage != null)
+            {
+                sendMessage = null;
+                InitMessageTypee(false);
+            }
+        } 
 
         protected virtual void OnMessage(string message)
         {
@@ -80,7 +123,7 @@ namespace ColorsWin.Process
             }
         }
 
-        private void InitProcessMessage(bool read)
+        private void InitMessageTypee(bool read)
         {
             switch (processMessageType)
             {
@@ -183,43 +226,7 @@ namespace ColorsWin.Process
             }
         }
 
-        public void ChangeAction(Action<string> actionMessage, bool reset)
-        {
-            if (reset || this.actionMessage == null)
-            {
-                this.actionMessage = actionMessage;
-            }
-            else
-            {
-                this.actionMessage += actionMessage;
-            }
-        }
 
-
-        public void ChangeAction(Action<byte[]> actionData, bool reset)
-        {
-            if (reset || this.actionData == null)
-            {
-                this.actionData = actionData;
-            }
-            else
-            {
-                this.actionData += actionData;
-            }
-        }
-
-
-        public void Stop(ProxyType type = ProxyType.All)
-        {
-            if (type == ProxyType.All || type == ProxyType.Read)
-            {
-                acceptMessage = null;
-            }
-            else if (type == ProxyType.All || type == ProxyType.Write)
-            {
-                sendMessage = null;
-            }
-        }
 
         public ProxyType GetProxyType()
         {
@@ -241,10 +248,7 @@ namespace ColorsWin.Process
             }
         }
 
-        public ProcessMessageType GetProcessMessageType()
-        {
-            return processMessageType;
-        }
+
     }
 
 

@@ -5,19 +5,22 @@ VisualStudioVersion = 16.0.30105.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ColorsWin.Process", "ColorsWin.Process\ColorsWin.Process.csproj", "{1615F575-EC4E-4B35-BD83-8DFC36A13EE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessDemo", "Demo\ProcessTest\ProcessDemo.csproj", "{2A23F9EE-81D7-4D54-84B0-59DCA9D13AFB}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demos", "Demos", "{5B581A72-342B-4901-B3BD-7539148DFE49}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo", "Demo", "{5B581A72-342B-4901-B3BD-7539148DFE49}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Process.ShareDemo", "Demos\Process.ShareDemo\Process.ShareDemo.shproj", "{1FA698A0-BAC5-4798-94F6-37AA4B4A9922}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProcessCoreDemo", "Demo\ProcessCoreTest\ProcessCoreDemo.csproj", "{10915871-0715-4BF0-BFF2-BC85B48EF88D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProcessCoreDemo", "Demos\ProcessCoreDemo\ProcessCoreDemo.csproj", "{704721F3-9914-477B-92F8-55457422C9BE}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Process.ShareTest", "Demo\Process.ShareTest\Process.ShareTest.shproj", "{1FA698A0-BAC5-4798-94F6-37AA4B4A9922}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessDemo", "Demos\ProcessDemo\ProcessDemo.csproj", "{2A23F9EE-81D7-4D54-84B0-59DCA9D13AFB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessServiceDemo", "Demos\ProcessServiceDemo\ProcessServiceDemo.csproj", "{30E0A2CB-A51D-43B3-A842-FEA195822DA3}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Demo\Process.ShareTest\Process.ShareTest.projitems*{10915871-0715-4bf0-bff2-bc85b48ef88d}*SharedItemsImports = 5
-		Demo\Process.ShareTest\Process.ShareTest.projitems*{1fa698a0-bac5-4798-94f6-37aa4b4a9922}*SharedItemsImports = 13
-		Demo\Process.ShareTest\Process.ShareTest.projitems*{2a23f9ee-81d7-4d54-84b0-59dca9d13afb}*SharedItemsImports = 4
+		Demos\Process.ShareDemo\Process.ShareTest.projitems*{1fa698a0-bac5-4798-94f6-37aa4b4a9922}*SharedItemsImports = 13
+		Demos\Process.ShareDemo\Process.ShareTest.projitems*{2a23f9ee-81d7-4d54-84b0-59dca9d13afb}*SharedItemsImports = 4
+		Demos\Process.ShareDemo\Process.ShareTest.projitems*{30e0a2cb-a51d-43b3-a842-fea195822da3}*SharedItemsImports = 4
+		Demos\Process.ShareDemo\Process.ShareTest.projitems*{704721f3-9914-477b-92f8-55457422c9be}*SharedItemsImports = 5
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,22 +31,27 @@ Global
 		{1615F575-EC4E-4B35-BD83-8DFC36A13EE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1615F575-EC4E-4B35-BD83-8DFC36A13EE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1615F575-EC4E-4B35-BD83-8DFC36A13EE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{704721F3-9914-477B-92F8-55457422C9BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{704721F3-9914-477B-92F8-55457422C9BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{704721F3-9914-477B-92F8-55457422C9BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{704721F3-9914-477B-92F8-55457422C9BE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2A23F9EE-81D7-4D54-84B0-59DCA9D13AFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2A23F9EE-81D7-4D54-84B0-59DCA9D13AFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A23F9EE-81D7-4D54-84B0-59DCA9D13AFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A23F9EE-81D7-4D54-84B0-59DCA9D13AFB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{10915871-0715-4BF0-BFF2-BC85B48EF88D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{10915871-0715-4BF0-BFF2-BC85B48EF88D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{10915871-0715-4BF0-BFF2-BC85B48EF88D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{10915871-0715-4BF0-BFF2-BC85B48EF88D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30E0A2CB-A51D-43B3-A842-FEA195822DA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30E0A2CB-A51D-43B3-A842-FEA195822DA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30E0A2CB-A51D-43B3-A842-FEA195822DA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30E0A2CB-A51D-43B3-A842-FEA195822DA3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{2A23F9EE-81D7-4D54-84B0-59DCA9D13AFB} = {5B581A72-342B-4901-B3BD-7539148DFE49}
-		{10915871-0715-4BF0-BFF2-BC85B48EF88D} = {5B581A72-342B-4901-B3BD-7539148DFE49}
 		{1FA698A0-BAC5-4798-94F6-37AA4B4A9922} = {5B581A72-342B-4901-B3BD-7539148DFE49}
+		{704721F3-9914-477B-92F8-55457422C9BE} = {5B581A72-342B-4901-B3BD-7539148DFE49}
+		{2A23F9EE-81D7-4D54-84B0-59DCA9D13AFB} = {5B581A72-342B-4901-B3BD-7539148DFE49}
+		{30E0A2CB-A51D-43B3-A842-FEA195822DA3} = {5B581A72-342B-4901-B3BD-7539148DFE49}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0BDF5E21-7A28-448E-8EBF-5829194C1FA9}

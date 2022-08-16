@@ -17,6 +17,8 @@
     <ProjectReference Include="..\..\ColorsWin.Process\ColorsWin.Process.csproj" />
   </ItemGroup>
 
-  <Import Project="..\Process.ShareTest\Process.ShareTest.projitems" Label="Shared" />
+  <Import Project="..\Process.ShareDemo\Process.ShareTest.projitems" Label="Shared" />
+
+  
 
 </Project>

@@ -15,6 +15,7 @@ namespace ColorsWin.Process.Helpers
 
             var headerData = BitConverter.GetBytes(data.Length);
             stream.Write(headerData, 0, headerData.Length);
+
             stream.Write(data, 0, data.Length);
         }
 

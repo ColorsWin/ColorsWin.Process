@@ -4,152 +4,110 @@ using System.Linq;
 
 namespace ColorsWin.Process
 {
-
     public class ProcessMessageManager
     {
-        private static Dictionary<string, ProcessMessageProxy> allProcessMessage;
+        private static Dictionary<string, ProcessMessageProxy> allMessageProxy;
         public static event Action<string, string> AllMessageEvent;
 
         static ProcessMessageManager()
         {
-            allProcessMessage = new Dictionary<string, ProcessMessageProxy>();
+            allMessageProxy = new Dictionary<string, ProcessMessageProxy>();
         }
 
         public static ProcessMessageType GetProcessMessageType(string processKey)
         {
-            if (allProcessMessage.ContainsKey(processKey))
+            if (allMessageProxy.ContainsKey(processKey))
             {
-                return allProcessMessage[processKey].GetProcessMessageType();
+                return allMessageProxy[processKey].GetProcessMessageType();
             }
             return ProcessMessageType.None;
         }
 
-        /// <summary>
-        /// 接受进程消息
-        /// </summary>
-        /// <param name="processKey">要监听的进程的key唯一值</param>
-        /// <param name="messageAction">收到消息后处理方法</param>
-        /// <param name="resetAction">是否重置接受方法 为true时候之前都不在接受</param>
         public static void AcceptMessage(string processKey, Action<string> messageAction, bool resetAction = false)
         {
             InitProcessMessage(processKey, messageAction, resetAction);
-            allProcessMessage[processKey].InitListenMessage();
+            allMessageProxy[processKey].InitMessage();
         }
 
-        /// <summary>
-        /// 接受进程消息 多个参数
-        /// </summary>
-        /// <param name="processKey">要监听的进程的key唯一值</param>
-        /// <param name="messageAction">收到消息后处理方法</param>
-        /// <param name="resetAction">是否重置接受方法 为true时候之前都不在接受</param>
         public static void AcceptData(string processKey, Action<byte[]> messageAction, bool resetAction = false)
         {
             InitProcessMessage(processKey, messageAction, resetAction);
-            allProcessMessage[processKey].InitListenMessage();
+            allMessageProxy[processKey].InitMessage();
         }
 
-
-        /// <summary>
-        /// 向指定进程发送消息
-        /// </summary>
-        /// <param name="message">发送内容</param>
-        /// <returns></returns>
         public static bool SendMessage(string processKey, string message)
         {
             InitProcessMessage(processKey);
-            return allProcessMessage[processKey].SendMessage(message);
+            return allMessageProxy[processKey].SendMessage(message);
         }
 
-
-        /// <summary>
-        /// 获取指定进程中数据 
-        /// </summary>
-        /// <param name="processKey">进程唯一标识</param>
-        /// <returns></returns>
         public static byte[] ReadData(string processKey)
         {
             InitProcessMessage(processKey);
-            return allProcessMessage[processKey].ReadData();
+            return allMessageProxy[processKey].ReadData();
         }
 
-        /// <summary>
-        /// 获取指定进程中数据
-        /// </summary>
-        /// <param name="processKey">进程唯一标识</param>
-        /// <returns></returns>
         public static string ReadMessage(string processKey)
         {
             InitProcessMessage(processKey);
-            return allProcessMessage[processKey].ReadMessage();
+            return allMessageProxy[processKey].ReadMessage();
         }
-        /// <summary>
-        /// 发送消息
-        /// </summary>
-        /// <param name="processKey"></param>
-        /// <param name="message"></param>
-        /// <returns></returns>
+
         public static bool SendData(string processKey, byte[] data)
         {
             InitProcessMessage(processKey);
-            return allProcessMessage[processKey].SendData(data);
+            return allMessageProxy[processKey].SendData(data);
         }
 
-
-        public static void InitProcessMessage(string processKey, ProcessMessageType processMessageType = ProcessMessageType.ShareMemory)
+        public static void InitMessageType(string processKey, ProcessMessageType processMessageType = ProcessMessageType.ShareMemory)
         {
-            if (!allProcessMessage.Keys.Contains(processKey))
+            if (!allMessageProxy.Keys.Contains(processKey))
             {
-                var mainWait = new ProcessMessageProxy(processKey, processMessageType);
-                allProcessMessage.Add(processKey, mainWait);
+                var proxy = new ProcessMessageProxy(processKey, processMessageType);
+                allMessageProxy.Add(processKey, proxy);
             }
             else
             {
-                allProcessMessage[processKey].ResetListenMessage();
+                allMessageProxy[processKey].Reset(processMessageType);
             }
         }
 
-        #region 内部实现
+        public static void UnInit(string processKey, ProxyType type = ProxyType.All)
+        {
+            if (allMessageProxy.Keys.Contains(processKey))
+            {
+                allMessageProxy[processKey].Stop(type);
+                var remove = type == ProxyType.All || type == allMessageProxy[processKey].GetProxyType();
+                if (remove)
+                {
+                    allMessageProxy.Remove(processKey);
+                }
+            }
+        }
 
-        /// <summary>
-        /// 初始化进程信息 如果已经初始化将忽略不计
-        /// </summary>
-        /// <param name="processKey"></param>
+        #region Private
+
         private static void InitProcessMessage(string processKey)
         {
-            if (!allProcessMessage.Keys.Contains(processKey))
+            if (!allMessageProxy.Keys.Contains(processKey))
             {
-                var mainWait = new ProcessMessageProxy(processKey);
-                allProcessMessage.Add(processKey, mainWait);
+                var proxy = new ProcessMessageProxy(processKey);
+                allMessageProxy.Add(processKey, proxy);
             }
         }
 
-        /// <summary>
-        /// 初始化进程信息
-        /// </summary>
-        /// <param name="processKey"></param>
-        /// <param name="read"></param>
         private static void InitProcessMessage(string processKey, Action<string> action, bool resetAction = false)
         {
             InitProcessMessage(processKey);
-            allProcessMessage[processKey].ChangeAction(action, resetAction);
+            allMessageProxy[processKey].ChangeAction(action, resetAction);
         }
 
-        /// <summary>
-        ///  初始化进程信息
-        /// </summary>
-        /// <param name="processKey"></param>
-        /// <param name="action"></param>
-        /// <param name="resetAction"></param>
         private static void InitProcessMessage(string processKey, Action<byte[]> action, bool resetAction = false)
         {
             InitProcessMessage(processKey);
-            allProcessMessage[processKey].ChangeAction(action, resetAction);
+            allMessageProxy[processKey].ChangeAction(action, resetAction);
         }
 
-        /// <summary>
-        /// 收到消息事件
-        /// </summary>
-        /// <param name="message"></param>
         internal static void OnAcceptMessage(string processKey, string message)
         {
             if (AllMessageEvent != null)
@@ -158,48 +116,24 @@ namespace ColorsWin.Process
             }
         }
 
-        #endregion
+        #endregion 
 
-        /// <summary>
-        /// 卸载进程消息
-        /// </summary>
-        /// <param name="processKey"></param>
-        /// <param name="type"></param>
-        public static void UnInit(string processKey, ProxyType type = ProxyType.All)
-        {
-            if (allProcessMessage.Keys.Contains(processKey))
-            {
-                allProcessMessage[processKey].Stop(type);
-                var remove = type == ProxyType.All || type == allProcessMessage[processKey].GetProxyType();
-                if (remove)
-                {
-                    allProcessMessage.Remove(processKey);
-                }
-            }
-        }
+        #region Default  
 
-        #region 默认  
+        private static string defaultProcessKey = "ColorsWin_eventWaitName";
 
-        private static string defaultProcessKey = "eventWaitName";
-        /// <summary>
-        /// 读取进程中数据
-        /// </summary>
-        /// <returns></returns>
         public static string ReadMessage()
         {
             return ReadMessage(defaultProcessKey);
         }
 
-        /// <summary>
-        /// 像进程发送消息
-        /// </summary>
-        /// <param name="message"></param>
-        /// <returns></returns>
-        public static bool WriteMessage(string message)
+        public static bool SendMessage(string message)
         {
             return SendMessage(defaultProcessKey, message);
         }
+
         #endregion
+
 
         #region Obsolete Methord
 

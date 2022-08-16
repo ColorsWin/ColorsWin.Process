@@ -1,42 +1,60 @@
-﻿using System.Diagnostics;
+﻿using ColorsWin.Process.Log;
+using System;
+using System.Diagnostics;
 
 namespace ColorsWin.Process.Helpers
 {
     public class LogHelper
     {
-        /// <summary>
-        /// 调试错误信息
-        /// </summary>
-        /// <param name="message"></param>
-        public static void Error(string message)
+        static LogHelper()
         {
-            Trace.WriteLine(message);
+            if (ProcessMessageConfig.Log == null)
+            {
+                ProcessMessageConfig.Log = new DefaultLog();
+            }
+        }
+
+        public static void Trace(string message)
+        {
+            ProcessMessageConfig.Log?.Trace(message);
         }
 
         public static void Debug(string message)
         {
-            //方式一
+            ProcessMessageConfig.Log?.Debug(message);
+        }
 
-            //if (Debugger.IsAttached)
-            //{
-            //  Console.WriteLine(message);
-            //}
+        public static void Info(string message)
+        {
+            ProcessMessageConfig.Log?.Info(message);
+        }
 
-            //方式二
-            //#if DEBUG
-            //  Console.WriteLine(message);
-            //#endif
+        public static void Warn(string message)
+        {
+            ProcessMessageConfig.Log?.Warn(message);
+        }
 
-            //Trace.WriteLine(message);
+        public static void Error(string message)
+        {
+            ProcessMessageConfig.Log?.Error(message);
+        }
 
-            System.Diagnostics.Debug.WriteLine(message);
+        public static void Fatal(string message)
+        {
+            ProcessMessageConfig.Log?.Fatal(message);
+        }
+
+        public static void WriteException(Exception ex)
+        {
+            ProcessMessageConfig.Log?.WriteException(ex);
+        }
+
+        public static void WriteException(Exception ex, string message)
+        {
+            ProcessMessageConfig.Log?.WriteException(ex, message);
         }
 
 
-        //[Conditional("DEBUG")]
-        //public static void WriteLine(string message)
-        //{
-        //    // Console.WriteLine(message); 
-        //}
+
     }
 }

@@ -23,10 +23,7 @@ namespace ColorsWin.Process.NamedPipe
             this.actionMessage = actionMessage;
         }
 
-        /// <summary>
-        /// 创建一个NamedPipeServerStream
-        /// </summary>
-        /// <returns></returns>
+
         protected NamedPipeServerStream CreateNamedPipeServerStream()
         {
             var npss = new NamedPipeServerStream(pipName, PipeDirection.InOut, 10);
@@ -35,10 +32,7 @@ namespace ColorsWin.Process.NamedPipe
             return npss;
         }
 
-        /// <summary>
-        /// 销毁
-        /// </summary>
-        /// <param name="npss"></param>
+
         protected void DistroyObject(NamedPipeServerStream npss)
         {
             npss.Close();
@@ -82,11 +76,10 @@ namespace ColorsWin.Process.NamedPipe
                             }
                         }
 
-
-                        //if (NamedPipeMessage.Wait)
-                        //{
-                        //    ReplyMessageMessage(messages, pipeServer);
-                        //}
+                        if (NamedPipeMessage.Wait)
+                        {
+                            //ReplyMessageMessage(messages, pipeServer);
+                        }
 
                         if (!pipeServer.IsConnected)
                         {
@@ -121,9 +114,7 @@ namespace ColorsWin.Process.NamedPipe
             }
         }
 
-        /// <summary>
-        /// 停止
-        /// </summary>
+
         public void Stop()
         {
             for (int i = 0; i < serverPool.Count; i++)
@@ -131,6 +122,25 @@ namespace ColorsWin.Process.NamedPipe
                 var item = serverPool[i];
                 DistroyObject(item);
             }
+        }
+
+        public void SendMessage(string message)
+        {
+            foreach (var pipeServer in serverPool)
+            {
+                if (!pipeServer.IsConnected)
+                {
+                    continue;
+                }
+                var data = System.Text.Encoding.UTF8.GetBytes(message);
+                pipeServer.Write(data,0,data.Length);
+                //using (var streamWriter = new StreamWriter(pipeServer))
+                //{
+                //    streamWriter.AutoFlush = true;
+                //    streamWriter.Write(message);
+                //}
+            }
+
         }
     }
 }

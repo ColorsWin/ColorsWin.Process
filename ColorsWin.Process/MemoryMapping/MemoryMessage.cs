@@ -11,9 +11,7 @@ namespace ColorsWin.Process
         private MemoryMappedFileObj memoryFile = null;
         private const string MemoryMappedFileNameTag = "_MemoryMappedFileName_ColorsWin";
         private const string EventWaitNameTag = "_EventWaitName_ColorsWin";
-        private string processKey = "eventWaitName";
-
-
+        private string processKey = "eventWaitName"; 
 
         public MemoryMessage(string processName, bool read)
         {
@@ -36,6 +34,7 @@ namespace ColorsWin.Process
         {
             memoryFile = MemoryMappedFileHelper.CreateMemoryMappedFileObj(GetProcessKey(MemoryMappedFileNameTag));
             eventWait = EventWaitHandleHelper.CreateEventHande(GetProcessKey(EventWaitNameTag), false);
+
             if (read)
             {
                 Task.Factory.StartNew(WaitForMessage);

@@ -11,7 +11,7 @@
 			also includes process help
 		</Description>
 		<PackageTags>Process,ProcessCommunication,Messages</PackageTags>
-		<PackageProjectUrl>http://www.ColorsWin.com/</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/ColorsWin/ColorsWin.Process</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ColorsWin/ColorsWin.Process</RepositoryUrl>
 		<Copyright>Copyright 2022</Copyright>
 		<PackageReleaseNotes>

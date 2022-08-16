@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace ColorsWin.Process.NamedPipe
 {
@@ -18,14 +19,11 @@ namespace ColorsWin.Process.NamedPipe
         /// </summary>
         public const string ReplyMessageFlat = "&&Reply&&";
 
-        /// <summary>
-        /// 进程名称
-        /// </summary>
-        public string ProcessKey { get; set; } = "eventWaitName";
 
-
-        //标识符防止重复 
+        private string processKey = "eventWaitName";
         private const string ProcessKeyTag = "_NamedPipe_ColorsWin";
+
+        private static Dictionary<string, string> allProcessMessageCache = new Dictionary<string, string>();
 
         private NamedPipeClient client;
         private NamedPipeListenServer server;
@@ -36,9 +34,8 @@ namespace ColorsWin.Process.NamedPipe
 
         public NamedPipeMessage(string processName, bool read)
         {
-            this.ProcessKey = processName;
+            this.processKey = processName;
             Init(read);
-
         }
 
 
@@ -49,41 +46,61 @@ namespace ColorsWin.Process.NamedPipe
                 AcceptData(data);
             }
         }
+
         public void OnAcceptMessage(string message)
         {
+            //if (message)
+            //{
+
+            //}
             if (AcceptMessage != null)
             {
                 AcceptMessage(message);
             }
         }
+
         public string ReadMessage()
         {
+            if (allProcessMessageCache.ContainsKey(processKey))
+            {
+                return allProcessMessageCache[processKey];
+            }
+            //get message from other Process
+
             return null;
         }
+
         public byte[] ReadData()
         {
             return null;
         }
-        public string WaitOneForMessage()
-        {
-            return null;
-        }
+
 
         public bool SendMessage(string message)
         {
+            allProcessMessageCache[processKey] = message;
+            if (server != null)
+            {
+                server.SendMessage(message);
+                return true;
+            }
             return client.SendMessage(message);
         }
+
         public bool SendData(byte[] message)
         {
             return client.SendData(message);
         }
 
-
-        internal void Init(bool read)
+        public void Init(bool read)
         {
             if (read)
             {
-                server = new NamedPipeListenServer(ProcessKeyTag + ProcessKey, OnAcceptData, OnAcceptMessage);
+                //if (server != null)
+                //{
+                //    return;
+                //}
+                server = new NamedPipeListenServer(ProcessKeyTag + processKey, OnAcceptData, OnAcceptMessage);
                 Task.Factory.StartNew(() =>
                 {
                     server.Run();
@@ -91,10 +108,12 @@ namespace ColorsWin.Process.NamedPipe
             }
             else
             {
-                client = new NamedPipeClient(".", ProcessKeyTag + ProcessKey);
+                //if (client != null)
+                //{
+                //    return;
+                //}
+                client = new NamedPipeClient(".", ProcessKeyTag + processKey);
             }
         }
-
-
     }
 }

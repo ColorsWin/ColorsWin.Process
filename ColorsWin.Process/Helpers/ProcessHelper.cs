@@ -5,31 +5,42 @@ using System.Security.Principal;
 
 namespace ColorsWin.Process
 {
+  
     public class ProcessHelper
     {
         private const int SW_SHOWNOMAL = 1;
         private static MemoryMappedFileObj fileMapped;
-        private static string handleTag = "ColorsWin_Handel";
+        private static string handlFlat = "WindowHandel";
         private static System.Threading.Mutex mutex;
+
+        public static bool IsRunAsAdmin()
+        {
+            var id = WindowsIdentity.GetCurrent();
+            var principal = new WindowsPrincipal(id);
+            return principal.IsInRole(WindowsBuiltInRole.Administrator);
+        }
 
         public static bool HadRun(string key)
         {
+            //string guid = "Global\\";
+            //guid += Assembly.GetEntryAssembly().GetCustomAttributes(false).OfType<AssemblyProductAttribute>().FirstOrDefault().Product;
+
             bool createNew;
             mutex = new System.Threading.Mutex(true, key, out createNew);
             return !createNew;
         }
 
-        public static void WriteHandel(string processKey, IntPtr handle)
+        public static void WriteHandel(string processKey, IntPtr windowHandel)
         {
-            fileMapped = MemoryMappedFileHelper.CreateMemoryMappedFileObj(processKey + handleTag);
-            fileMapped.WriteMessage(handle.ToString());
+            fileMapped = MemoryMappedFileHelper.CreateMemoryMappedFileObj(processKey + handlFlat);
+            fileMapped.WriteMessage(windowHandel.ToString());
         }
 
         public static bool HadRun(string processKey, bool activeWindow = false)
         {
             if (activeWindow)
             {
-                var handelStr = MemoryMappedFileHelper.CreateMemoryMappedFileObj(processKey + handleTag).ReadMessage();
+                var handelStr = MemoryMappedFileHelper.CreateMemoryMappedFileObj(processKey + handlFlat).ReadMessage();
                 if (!string.IsNullOrEmpty(handelStr))
                 {
                     var handel = (IntPtr)int.Parse(handelStr);
@@ -39,13 +50,6 @@ namespace ColorsWin.Process
             }
 
             return HadRun(processKey);
-        }
-
-        public static bool IsRunAsAdmin()
-        {
-            var id = WindowsIdentity.GetCurrent();
-            var principal = new WindowsPrincipal(id);
-            return principal.IsInRole(WindowsBuiltInRole.Administrator);
         }
     }
 }

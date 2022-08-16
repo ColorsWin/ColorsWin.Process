@@ -13,5 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)TestFile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestMemoryShare.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestNamedPipe.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestWinService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileLog.cs" />
   </ItemGroup>
 </Project>
