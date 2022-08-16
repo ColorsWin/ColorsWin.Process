@@ -17,14 +17,14 @@ namespace ColorsWin.Process
         public override void WriteData(byte[] data)
         {
             viewStream.Position = 0;
-            StringStreamHelper.WriteData(viewStream, data, IsString);
+            StreamHelper.WriteData(viewStream, data, IsString);
         }
 
         public override byte[] ReadData()
         {
             viewStream.Position = 0;
             bool tempIsString;
-            var data = StringStreamHelper.ReadData(viewStream, out tempIsString);
+            var data = StreamHelper.ReadData(viewStream, out tempIsString);
             IsString = tempIsString;
             return data;
         }

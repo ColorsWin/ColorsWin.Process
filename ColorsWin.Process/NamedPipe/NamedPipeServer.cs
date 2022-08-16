@@ -59,7 +59,7 @@ namespace ColorsWin.Process.NamedPipe
                     {
                         bool tempIsString;
 
-                        var data = StringStreamHelper.ReadData(pipeServer, out tempIsString);
+                        var data = StreamHelper.ReadData(pipeServer, out tempIsString);
                         if (tempIsString)
                         {
                             if (actionMessage != null)

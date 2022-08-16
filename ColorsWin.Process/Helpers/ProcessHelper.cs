@@ -4,7 +4,7 @@ using System;
 using System.Security.Principal;
 
 namespace ColorsWin.Process
-{  
+{
     public class ProcessHelper
     {
         private const int SW_SHOWNOMAL = 1;
@@ -49,6 +49,16 @@ namespace ColorsWin.Process
             }
 
             return HadRun(processKey);
+        }
+        public static bool HadRunEx(string processKey, bool activeWindow = false)
+        {
+            var processHandle = ProcessMessageManager.ReadMessage(processKey);
+            bool handRun = !string.IsNullOrEmpty(processHandle);
+            if (activeWindow && handRun)
+            {
+                ProcessMessageManager.SendMessage(processKey, "NormalWindow");
+            }
+            return handRun;
         }
     }
 }

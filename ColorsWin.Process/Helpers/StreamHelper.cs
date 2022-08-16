@@ -6,7 +6,7 @@ using System.Text;
 namespace ColorsWin.Process.Helpers
 {
 
-    public class StringStreamHelper
+    public class StreamHelper
     {
         public static void WriteData(Stream stream, byte[] data, bool isString = false)
         {

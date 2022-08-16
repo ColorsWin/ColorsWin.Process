@@ -23,16 +23,16 @@ namespace ColorsWin.Process.NamedPipe
             {
                 pipeClient.Connect(10000);
             }
-            StringStreamHelper.WriteData(pipeClient, message, false);
+            StreamHelper.WriteData(pipeClient, message, false);
             pipeClient.Flush();
 
-            //if (NamedPipeMessage.Wait)
-            //{
-            //    //等待服务器响应才能继续发送 
-            //    var streamReader = new StreamReader(pipeClient);
-            //    string returnVal = streamReader.ReadToEnd();//等待服务端返回
-            //    return returnVal == NamedPipeMessage.ReplyMessageFlat ;
-            //}
+            if (NamedPipeMessage.Wait)
+            {
+                // Wait service send message  then send  next message
+                var streamReader = new System.IO.StreamReader(pipeClient);
+                string returnVal = streamReader.ReadToEnd(); 
+                return returnVal == NamedPipeMessage.ReplyMessageFlat;
+            }
 
             return true;
         }
@@ -44,17 +44,8 @@ namespace ColorsWin.Process.NamedPipe
             {
                 pipeClient.Connect(10000);
             }
-            StringStreamHelper.WriteData(pipeClient, data, true);
+            StreamHelper.WriteData(pipeClient, data, true);
             pipeClient.Flush();
-
-            //if (NamedPipeMessage.Wait)
-            //{
-            //    //等待服务器响应才能继续发送 
-            //    var streamReader = new StreamReader(pipeClient);
-            //    string returnVal = streamReader.ReadToEnd();//等待服务端返回
-            //    return returnVal == NamedPipeMessage.ReplyMessageFlat ;
-            //}
-
             return true;
         }
 

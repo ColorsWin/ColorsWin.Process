@@ -80,7 +80,7 @@ namespace ColorsWin.Process
 
             using (var fs = new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                var data = StringStreamHelper.ReadData(fs, out isString);
+                var data = StreamHelper.ReadData(fs, out isString);
                 return data;
             }
         }
@@ -93,7 +93,7 @@ namespace ColorsWin.Process
             using (var fs = new FileStream(fullPath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
             {
                 fs.Position = 0;
-                StringStreamHelper.WriteData(fs, data, isString);
+                StreamHelper.WriteData(fs, data, isString);
                 return true;
             }
         }
