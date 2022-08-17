@@ -32,8 +32,7 @@ namespace ColorsWin.Process.Test
         static void Main(string[] args)
         {
             string processKey = "ProcessMessage_Key";
-
-            ProcessMessageManager.AcceptMessage(processKey, (item) =>
+            ProcessMessageManager.AcceptMessage(processKey, item =>
             {
                 Console.WriteLine(processKey + "-----Message:" + item);
             });
@@ -56,8 +55,8 @@ namespace ColorsWin.Process.Test
     class Program
     {
         static void Main(string[] args)
-        { 
-		    ProcessMessageConfig.ProcessMessageType = ProcessMessageType.File;
+        {
+            ProcessMessageConfig.ProcessMessageType = ProcessMessageType.File;
             string processKey = "ProcessMessage_Key";
             ProcessMessageManager.SendMessage(processKey, " Hello App1");
             Console.Read();
@@ -80,7 +79,7 @@ namespace ColorsWin.Process.Test
         {
 		    ProcessMessageConfig.ProcessMessageType = ProcessMessageType.File;
             string processKey = "ProcessMessage_Key";
-            ProcessMessageManager.AcceptMessage(processKey, (item) =>
+            ProcessMessageManager.AcceptMessage(processKey, item =>
             {
                 Console.WriteLine(processKey + "-----Message:" + item);
             });
@@ -126,7 +125,7 @@ namespace ColorsWin.Process.Test
         static void Main(string[] args)
         {
             string processKey = "ProcessMessage_Key";
-            ProcessMessageManager.AcceptData(processKey, (data) =>
+            ProcessMessageManager.AcceptData(processKey, data =>
             {               
                 var message = System.Text.Encoding.Default.GetString(data);
                 Console.WriteLine(message);
