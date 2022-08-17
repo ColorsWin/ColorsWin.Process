@@ -20,8 +20,6 @@ namespace ColorsWin.Process.Test
 
 ```
 
------------------------------------
-
 #### The acceptMessage process
 
 ```C++
@@ -45,6 +43,56 @@ namespace ColorsWin.Process.Test
 }
 ```
 
+-----------------------------------
+
+
+#### The sendMessage process by File
+
+```C++
+using System;
+
+namespace ColorsWin.Process.Test
+{
+    class Program
+    {
+        static void Main(string[] args)
+        { 
+		    ProcessMessageConfig.ProcessMessageType = ProcessMessageType.File;
+            string processKey = "ProcessMessage_Key";
+            ProcessMessageManager.SendMessage(processKey, " Hello App1");
+            Console.Read();
+        }
+    }
+}
+
+```
+
+#### The acceptMessage process by File
+
+```C++
+using System;
+
+namespace ColorsWin.Process.Test
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+		    ProcessMessageConfig.ProcessMessageType = ProcessMessageType.File;
+            string processKey = "ProcessMessage_Key";
+            ProcessMessageManager.AcceptMessage(processKey, (item) =>
+            {
+                Console.WriteLine(processKey + "-----Message:" + item);
+            });
+            Console.Read();
+        }
+    }
+}
+```
+
+-----------------------------------
+
+
 #### The sendData process
 
 ```C++
@@ -65,8 +113,6 @@ namespace ColorsWin.Process.Test
 }
 
 ```
-
------------------------------------
 
 #### The acceptData process
 
@@ -92,6 +138,7 @@ namespace ColorsWin.Process.Test
 ```
 
 -----------------------------------
+
 #### ProcessMessageType:
 |Type       |Complete          |Remark          |
 | -------------|:--------------:|:--------------:|
@@ -99,7 +146,7 @@ namespace ColorsWin.Process.Test
 |NamedPipe|√|Many Send , One Accept|
 |Message|√|need IntPtr|
 |File|√|Many Send , Many Accept|
-|MQ|X|next version||
+|MQ|X|Dependent on third-party ,so will not be realized||
 
 
 
