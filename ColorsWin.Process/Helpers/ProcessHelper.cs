@@ -50,6 +50,7 @@ namespace ColorsWin.Process
 
             return HadRun(processKey);
         }
+
         public static bool HadRunEx(string processKey, bool activeWindow = false)
         {
             var processHandle = ProcessMessageManager.ReadMessage(processKey);
@@ -59,6 +60,31 @@ namespace ColorsWin.Process
                 ProcessMessageManager.SendMessage(processKey, "NormalWindow");
             }
             return handRun;
+        }
+
+        public static string RunCMDCommand(params string[] commandLine)
+        {
+            using (var processs = new System.Diagnostics.Process())
+            {
+                processs.StartInfo.FileName = "cmd.exe";
+                processs.StartInfo.CreateNoWindow = true;
+                processs.StartInfo.RedirectStandardError = true;
+                processs.StartInfo.RedirectStandardInput = true;
+                processs.StartInfo.RedirectStandardOutput = true;
+                processs.StartInfo.UseShellExecute = false;
+                processs.Start();
+                int lenght = commandLine.Length;
+                foreach (string com in commandLine)
+                {
+                    processs.StandardInput.WriteLine(com);
+                }
+                processs.StandardInput.WriteLine("exit");
+                processs.StandardInput.AutoFlush = true;
+                var outPut = processs.StandardOutput.ReadToEnd();
+                processs.WaitForExit();
+                processs.Close();
+                return outPut;
+            }
         }
     }
 }

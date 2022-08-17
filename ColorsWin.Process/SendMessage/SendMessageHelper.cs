@@ -15,7 +15,7 @@ namespace ColorsWin.Process.SendMessage
             var WINDOW_HANDLE = handle;
             if (WINDOW_HANDLE != 0)
             {
-                byte[] arr = System.Text.Encoding.Default.GetBytes(message);
+                byte[] arr = ProcessMessageConfig.Encoding.GetBytes(message);
                 int dataLength = arr.Length;
                 COPYDATASTRUCT cdata;
                 cdata.dwData = ownerHandle;
@@ -61,7 +61,7 @@ namespace ColorsWin.Process.SendMessage
                 {
                     byte[] data = new byte[length];
                     Marshal.Copy(cdata.lpData, data, 0, length);
-                    string content = System.Text.Encoding.Default.GetString(data);
+                    string content = ProcessMessageConfig.Encoding.GetString(data);
                 }
             }
             return IntPtr.Zero;

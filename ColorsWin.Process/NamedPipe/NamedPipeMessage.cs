@@ -7,20 +7,13 @@ namespace ColorsWin.Process.NamedPipe
     class NamedPipeMessage : IProcessMessage
     {
         public static bool Wait { get; set; } = false;
-
         public const string ReplyMessageFlat = "&&Reply&&";
-
-
         private string processKey = "eventWaitName";
         private const string ProcessKeyTag = "_NamedPipe_ColorsWin";
-
         private static Dictionary<string, string> allProcessMessageCache = new Dictionary<string, string>();
-
         private NamedPipeClient client;
         private NamedPipeListenServer server;
-
         public event Action<string> AcceptMessage;
-
         public event Action<byte[]> AcceptData;
 
         public NamedPipeMessage(string processName, bool read)
@@ -66,12 +59,7 @@ namespace ColorsWin.Process.NamedPipe
 
         public bool SendMessage(string message)
         {
-            allProcessMessageCache[processKey] = message;
-            if (server != null)
-            {
-                server.SendMessage(message);
-                return true;
-            }
+            allProcessMessageCache[processKey] = message;            
             return client.SendMessage(message);
         }
 

@@ -51,7 +51,7 @@ namespace ColorsWin.Process
                 {
                     if (AcceptMessage != null)
                     {
-                        var message = System.Text.Encoding.Default.GetString(data);
+                        var message = ProcessMessageConfig.Encoding.GetString(data);
                         AcceptMessage(message);
                     }
                 }
@@ -78,13 +78,12 @@ namespace ColorsWin.Process
             {
                 return null;
             }
-            return System.Text.Encoding.Default.GetString(data);
+            return ProcessMessageConfig.Encoding.GetString(data);
         }
-
 
         public bool SendMessage(string message)
         {
-            var data = System.Text.Encoding.Default.GetBytes(message);
+            var data = ProcessMessageConfig.Encoding.GetBytes(message);
             memoryFile.IsString = true;
             return SendData(data);
         }

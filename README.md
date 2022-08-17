@@ -45,11 +45,57 @@ namespace ColorsWin.Process.Test
 }
 ```
 
+#### The sendData process
+
+```C++
+using System;
+
+namespace ColorsWin.Process.Test
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            byte[] data = System.Text.Encoding.Default.GetBytes(" Hello App1");
+            string processKey = "ProcessMessage_Key";
+            ProcessMessageManager.SendData(processKey, data);
+            Console.Read();
+        }
+    }
+}
+
+```
+
+-----------------------------------
+
+#### The acceptData process
+
+```C++
+using System;
+
+namespace ColorsWin.Process.Test
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string processKey = "ProcessMessage_Key";
+            ProcessMessageManager.AcceptData(processKey, (data) =>
+            {               
+                var message = System.Text.Encoding.Default.GetString(data);
+                Console.WriteLine(message);
+            });
+            Console.Read();
+        }
+    }
+}
+```
+
 -----------------------------------
 #### ProcessMessageType:
 |Type       |Complete          |Remark          |
 | -------------|:--------------:|:--------------:|
-|ShareMemory|default| Many Send , Many Accept |
+|ShareMemory|√| default ProcessMessageType |
 |NamedPipe|√|Many Send , One Accept|
 |Message|√|need IntPtr|
 |File|√|Many Send , Many Accept|

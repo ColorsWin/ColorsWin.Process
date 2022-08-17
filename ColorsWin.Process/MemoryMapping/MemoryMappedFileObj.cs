@@ -49,7 +49,7 @@ namespace ColorsWin.Process
 
         public virtual void WriteMessage(string message)
         {
-            var data = System.Text.Encoding.Default.GetBytes(message);
+            var data = ProcessMessageConfig.Encoding.GetBytes(message);
             IsString = true;
             WriteData(data);
             IsString = false;
@@ -58,7 +58,7 @@ namespace ColorsWin.Process
         public virtual string ReadMessage()
         {
             var data = ReadData();
-            return System.Text.Encoding.Default.GetString(data);
+            return ProcessMessageConfig.Encoding.GetString(data);
         }
 
         internal bool IsString { get; set; } = false;

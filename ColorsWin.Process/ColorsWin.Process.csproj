@@ -2,24 +2,22 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net40;netstandard2.0</TargetFrameworks>
-		<AssemblyVersion>1.0.8.0</AssemblyVersion>
-		<Version>1.0.8</Version>
+		<AssemblyVersion>1.0.10.0</AssemblyVersion>
+		<Version>1.0.10</Version>
 		<PackageIconUrl>https://multicolorwin.oss-cn-beijing.aliyuncs.com/image/256.png</PackageIconUrl>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Description>
-			Communication between processes, through memory sharing, named pipes, files, sending messages
-			also includes process help
+		<Description>Communication between processes, through memory sharing, named pipes, files, sending messages
+also includes  some process class help
 		</Description>
 		<PackageTags>Process,ProcessCommunication,Messages</PackageTags>
 		<PackageProjectUrl>https://github.com/ColorsWin/ColorsWin.Process</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ColorsWin/ColorsWin.Process</RepositoryUrl>
 		<Copyright>Copyright 2022</Copyright>
-		<PackageReleaseNotes>
-			Communication between processes, through memory sharing, named pipes, files, sending messages
-			also includes process help
-		</PackageReleaseNotes>
+		<PackageReleaseNotes>Communication between processes, through memory sharing, named pipes, files, sending messages
+also includes  some process class help		</PackageReleaseNotes>
 		<RepositoryType>MIT</RepositoryType>
-		<FileVersion>1.0.8.0</FileVersion>
+		<FileVersion>1.0.10.0</FileVersion>
+		<Authors>ColorsWin</Authors>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

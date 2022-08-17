@@ -8,11 +8,10 @@ namespace ProcessDemo
         static void Main(string[] args)
         {
             //OtherTest.Output();
-            //TestMemoryShare.OutPut();
+            TestMemoryShare.OutPut();
             // TestFile.OutPut();
             // TestNamedPipe.OutPut();
-            TestWinService.Output();
-
+            //TestWinService.Output();
             Console.Read();
         }
     }

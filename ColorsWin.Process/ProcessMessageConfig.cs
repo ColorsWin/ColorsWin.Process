@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 
 namespace ColorsWin.Process
 {
@@ -25,5 +26,7 @@ namespace ColorsWin.Process
         public static string FileMessageCachePath { get; set; }
 
         public static ILog Log { get; set; }
+
+        public static Encoding Encoding { get; } = Encoding.Default;
     }
 }

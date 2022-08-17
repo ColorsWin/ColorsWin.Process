@@ -39,7 +39,7 @@ namespace ColorsWin.Process.NamedPipe
 
         public bool SendMessage(string message)
         {
-            var data = System.Text.Encoding.UTF8.GetBytes(message);
+            var data = ProcessMessageConfig.Encoding.GetBytes(message);
             if (!pipeClient.IsConnected)
             {
                 pipeClient.Connect(10000);
