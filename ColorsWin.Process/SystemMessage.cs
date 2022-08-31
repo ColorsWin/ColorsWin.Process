@@ -10,11 +10,18 @@ namespace ColorsWin.Process
 
         static SystemMessageManager()
         {
+            Init();
+        }
+        public static void Init()
+        {
+            if (sysProcessMessageProxy != null)
+            {
+                return;
+            }
             sysProcessMessageProxy = new ProcessMessageProxy("sys_ColorsWin");
             sysProcessMessageProxy.ChangeAction(OnSystemMessage, true);
             sysProcessMessageProxy.InitMessage();
         }
-
         private static void OnSystemMessage(byte[] data)
         {
             var message = ObjectSerializeHelper.Deserialize(data) as SystemMessage;
@@ -51,7 +58,7 @@ namespace ColorsWin.Process
             message.ProcessId = GetProcessId();
             message.Time = DateTime.Now;
             LogHelper.Debug("Replay:" + message.Data + message.ProcessId);
-            System.Threading.Thread.Sleep(100);
+            System.Threading.Thread.Sleep(50);
             SendSystemMessage(message);
         }
 
@@ -68,16 +75,16 @@ namespace ColorsWin.Process
         {
             sendResult = false;
             Token = Guid.NewGuid().ToString();
-
-            LogHelper.Debug("发送系统消息" + data + Token);
-            SendSystemMessage(new SystemMessage
+            var message = new SystemMessage
             {
                 ProcessId = GetProcessId(),
                 Token = Token,
                 CmdType = cmd,
                 Time = DateTime.Now,
                 Data = data
-            });
+            };
+            SendSystemMessage(message);
+            LogHelper.Debug("SendSystemMessage::" + data + message.ProcessId);
         }
 
         internal static bool ProcessIsRuning(string processKey)

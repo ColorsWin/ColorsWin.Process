@@ -12,6 +12,7 @@ namespace ColorsWin.Process
         static ProcessMessageManager()
         {
             allMessageProxy = new Dictionary<string, ProcessMessageProxy>();
+            SystemMessageManager.Init();
         }
 
         public static ProcessMessageType GetProcessMessageType(string processKey)
