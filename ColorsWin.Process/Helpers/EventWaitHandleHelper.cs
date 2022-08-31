@@ -3,16 +3,16 @@ using System.Security.Principal;
 using System.Threading;
 
 namespace ColorsWin.Process.Helpers
-{   
+{
     public class EventWaitHandleHelper
     {
-      
+
         public static EventWaitHandle CreateEventHande(string eventName, bool read = false)
         {
             EventWaitHandle handle = null;
             try
             {
-                handle = new EventWaitHandle(read, EventResetMode.ManualReset, eventName);
+                handle = new EventWaitHandle(!read, EventResetMode.ManualReset, eventName);
             }
             catch (WaitHandleCannotBeOpenedException ex)
             {
@@ -47,7 +47,7 @@ namespace ColorsWin.Process.Helpers
             return handle;
         }
 
-     
+
         public static EventWaitHandle OpenOrCreateEventHande(string eventName)
         {
             var handle = OpenEventHande(eventName);

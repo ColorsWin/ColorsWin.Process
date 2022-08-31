@@ -30,25 +30,25 @@ namespace ColorsWin.Process
         }
         public bool SendData(byte[] data)
         {
-            InitMessageTypee(false);
+            InitMessageType(false);
             return sendMessage.SendData(data);
         }
 
         public byte[] ReadData()
         {
-            InitMessageTypee(true);
+            InitMessageType(true);
             return acceptMessage.ReadData();
         }
 
         public bool SendMessage(string message)
         {
-            InitMessageTypee(false);
+            InitMessageType(false);
             return sendMessage.SendMessage(message);
         }
 
         public string ReadMessage()
         {
-            InitMessageTypee(true);
+            InitMessageType(true);
             return acceptMessage.ReadMessage();
         }
 
@@ -91,7 +91,7 @@ namespace ColorsWin.Process
 
         internal void InitMessage()
         {
-            InitMessageTypee(true);
+            InitMessageType(true);
         }
 
         internal void Reset(ProcessMessageType processMessageType = ProcessMessageType.ShareMemory)
@@ -100,13 +100,13 @@ namespace ColorsWin.Process
             if (acceptMessage != null)
             {
                 acceptMessage = null;
-                InitMessageTypee(true);
+                InitMessageType(true);
             }
 
             if (sendMessage != null)
             {
                 sendMessage = null;
-                InitMessageTypee(false);
+                InitMessageType(false);
             }
         } 
 
@@ -123,7 +123,7 @@ namespace ColorsWin.Process
             }
         }
 
-        private void InitMessageTypee(bool read)
+        private void InitMessageType(bool read)
         {
             switch (processMessageType)
             {

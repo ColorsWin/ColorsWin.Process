@@ -11,7 +11,7 @@ namespace ColorsWin.Process
         private MemoryMappedFileObj memoryFile = null;
         private const string MemoryMappedFileNameTag = "_MemoryMappedFileName_ColorsWin";
         private const string EventWaitNameTag = "_EventWaitName_ColorsWin";
-        private string processKey = "eventWaitName"; 
+        private string processKey = "eventWaitName";
 
         public MemoryMessage(string processName, bool read)
         {
@@ -33,7 +33,7 @@ namespace ColorsWin.Process
         private void Init(bool read)
         {
             memoryFile = MemoryMappedFileHelper.CreateMemoryMappedFileObj(GetProcessKey(MemoryMappedFileNameTag));
-            eventWait = EventWaitHandleHelper.CreateEventHande(GetProcessKey(EventWaitNameTag), false);
+            eventWait = EventWaitHandleHelper.CreateEventHande(GetProcessKey(EventWaitNameTag), read);
 
             if (read)
             {
@@ -95,11 +95,13 @@ namespace ColorsWin.Process
             if (eventWait != null)
             {
                 eventWait.Set();
+
                 //暂时未处理 批量快速发消息 会导致接受不全【写入速度过快，读取速度跟不上】
 
                 Thread.Sleep(ProcessMessageConfig.BatchSendWaitTime);
 
                 eventWait.Reset();//如果注释掉这句代码   A先发送消息,B在运行程序也会收到
+
                 return true;
             }
             return false;

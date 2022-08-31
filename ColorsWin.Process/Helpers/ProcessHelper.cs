@@ -62,6 +62,13 @@ namespace ColorsWin.Process
             return handRun;
         }
 
+
+        public static bool IsRuning(string processKey)
+        {
+            return SystemMessageManager.ProcessIsRuning(processKey);
+        }
+
+
         public static string RunCMDCommand(params string[] commandLine)
         {
             using (var processs = new System.Diagnostics.Process())

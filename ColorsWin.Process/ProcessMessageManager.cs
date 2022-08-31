@@ -85,6 +85,11 @@ namespace ColorsWin.Process
             }
         }
 
+        public static bool IsExistProcessKey(string processKey)
+        {
+            return allMessageProxy.ContainsKey(processKey);
+        }
+
         #region Private
 
         private static void InitProcessMessage(string processKey)

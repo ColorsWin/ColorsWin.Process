@@ -1,15 +1,20 @@
-﻿using System.IO;
+﻿using ColorsWin.Process;
+using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Security.AccessControl;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ProcessDemo
 {
     class OtherTest
     {
+        private static EventWaitHandle handle;
         public static void Output()
         {
-            // Not Admin  Run Error
+            TestIsRuning();
 
+            // Not Admin  Run Error
             var security = new MemoryMappedFileSecurity();
             security.AddAccessRule(new AccessRule<MemoryMappedFileRights>(
                                                 "Everyone",
@@ -23,6 +28,23 @@ namespace ProcessDemo
                                         security,
                                         HandleInheritability.Inheritable);
         }
+
+        private static void TestIsRuning()
+        {
+            var tempProcessKey = "test111";
+            ProcessMessageManager.SendMessage(tempProcessKey, "1234");
+
+            var result = ProcessHelper.IsRuning(tempProcessKey);
+            if (result)
+            {
+                System.Console.WriteLine("Runing");
+            }
+            else
+            {
+                System.Console.WriteLine("Not Find");
+            }
+        }
+
         private void Output2()
         {
 
