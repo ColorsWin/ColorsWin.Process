@@ -28,5 +28,7 @@ namespace ColorsWin.Process
         public static ILog Log { get; set; }
 
         public static Encoding Encoding { get; } = Encoding.Default;
+
+        public static bool NamePieService { get; set; } = false;
     }
 }

@@ -62,6 +62,7 @@ namespace ColorsWin.Process
             {
                 this.actionMessage += actionMessage;
             }
+            InitMessageType(true);
         }
 
 
@@ -94,7 +95,7 @@ namespace ColorsWin.Process
             InitMessageType(true);
         }
 
-        internal void Reset(ProcessMessageType processMessageType = ProcessMessageType.ShareMemory)
+        public void Reset(ProcessMessageType processMessageType = ProcessMessageType.ShareMemory)
         {
             this.processMessageType = processMessageType;
             if (acceptMessage != null)
@@ -108,7 +109,7 @@ namespace ColorsWin.Process
                 sendMessage = null;
                 InitMessageType(false);
             }
-        } 
+        }
 
         protected virtual void OnMessage(string message)
         {

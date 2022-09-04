@@ -25,7 +25,7 @@ namespace ColorsWin.Process.NamedPipe
         {
             var npss = new NamedPipeServerStream(pipName, PipeDirection.InOut, 10);
             serverPool.Add(npss);
-            LogHelper.Debug("Create One NamedPipeServerStream:" + npss.GetHashCode());
+            LogHelper.Debug($"Create One Server:{pipName} " + npss.GetHashCode());
             return npss;
         }
 
@@ -37,7 +37,7 @@ namespace ColorsWin.Process.NamedPipe
             {
                 serverPool.Remove(npss);
             }
-            LogHelper.Debug("Distroy One NamedPipeServerStream: " + npss.GetHashCode());
+            LogHelper.Debug($"Distroy One Server: {pipName}_" + npss.GetHashCode());
         }
 
         public void Run()
@@ -46,9 +46,7 @@ namespace ColorsWin.Process.NamedPipe
             {
                 pipeServer.WaitForConnection();
 
-                LogHelper.Debug("Create One Connection" + pipeServer.GetHashCode());
-
-                //new Action(Run).BeginInvoke(null, null);//dotnetCore Run Error
+                LogHelper.Debug($"Create One Connection:{pipName} " + pipeServer.GetHashCode());
 
                 Task.Factory.StartNew(Run);
 
@@ -78,7 +76,7 @@ namespace ColorsWin.Process.NamedPipe
 
                         if (NamedPipeMessage.Wait)
                         {
-                            //ReplyMessageMessage(messages, pipeServer);
+                            ReplyMessageMessage(pipeServer);
                         }
 
                         if (!pipeServer.IsConnected)
@@ -97,10 +95,10 @@ namespace ColorsWin.Process.NamedPipe
                     DistroyObject(pipeServer);
                 }
             }
-        } 
+        }
 
-      
-        protected virtual void ReplyMessageMessage(string[] message, NamedPipeServerStream pipeServer)
+
+        protected virtual void ReplyMessageMessage(NamedPipeServerStream pipeServer)
         {
             using (var streamWriter = new StreamWriter(pipeServer))
             {
@@ -117,25 +115,6 @@ namespace ColorsWin.Process.NamedPipe
                 var item = serverPool[i];
                 DistroyObject(item);
             }
-        }
-
-        public void SendMessage(string message)
-        {
-            foreach (var pipeServer in serverPool)
-            {
-                if (!pipeServer.IsConnected)
-                {
-                    continue;
-                }
-                var data = System.Text.Encoding.UTF8.GetBytes(message);
-                pipeServer.Write(data, 0, data.Length);
-                //using (var streamWriter = new StreamWriter(pipeServer))
-                //{
-                //    streamWriter.AutoFlush = true;
-                //    streamWriter.Write(message);
-                //}
-            }
-
-        }
+        } 
     }
 }

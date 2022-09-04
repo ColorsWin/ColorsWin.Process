@@ -1,4 +1,5 @@
 ﻿using ColorsWin.Process.Helpers;
+using ColorsWin.Process.NamedPipe;
 using System;
 using System.Threading;
 
@@ -12,16 +13,21 @@ namespace ColorsWin.Process
         {
             Init();
         }
+
+        private const string ServiceTag = "ColorsWin.Service";
+        private const string ClientTag = "ColorsWin.Client";
         public static void Init()
         {
             if (sysProcessMessageProxy != null)
             {
                 return;
             }
-            sysProcessMessageProxy = new ProcessMessageProxy("sys_ColorsWin");
+            sysProcessMessageProxy = new ProcessMessageProxy("sys_ColorsWin", ProcessMessageType.ShareMemory);
             sysProcessMessageProxy.ChangeAction(OnSystemMessage, true);
             sysProcessMessageProxy.InitMessage();
+            Start();
         }
+
         private static void OnSystemMessage(byte[] data)
         {
             var message = ObjectSerializeHelper.Deserialize(data) as SystemMessage;
@@ -38,8 +44,21 @@ namespace ColorsWin.Process
                 return;
             }
 
-            LogHelper.Debug("Accept SystemMessage:" + message.Data + message.ProcessId);
+            // LogHelper.Debug("Accept SystemMessage:" + message.Data + message.ProcessId);
+
             if (message.CmdType == 1)
+            {
+                if (message.Data == ServiceTag)
+                {
+                    LogHelper.Debug("收到服务器启动消息:------" + "开始连接服务器");
+                    SystemNamedPipeMessage.Singleton.Connect();
+                }
+                else
+                {
+                    LogHelper.Debug("收到客户端启动消息:------");
+                }
+            }
+            else if (message.CmdType == 100)
             {
                 if (ProcessMessageManager.IsExistProcessKey(message.Data))
                 {
@@ -84,16 +103,46 @@ namespace ColorsWin.Process
                 Data = data
             };
             SendSystemMessage(message);
-            LogHelper.Debug("SendSystemMessage::" + data + message.ProcessId);
+
+            //  LogHelper.Debug("SendSystemMessage::" + data + message.ProcessId);
         }
+
+
+
+        internal static void Start()
+        {
+            string startTag = ClientTag;
+            if (ProcessMessageConfig.NamePieService)
+            {
+                startTag = ServiceTag;
+                var t = SystemNamedPipeMessage.Singleton;
+            }
+            else
+            {
+                SystemNamedPipeMessage.Singleton.Connect();
+            }
+
+            SystemSendMessage(1, startTag); 
+           
+
+            LogHelper.Debug("程序启动::" + startTag);
+        }
+
 
         internal static bool ProcessIsRuning(string processKey)
         {
-            SystemSendMessage(1, processKey);
-            autoEvent.WaitOne(1000);
-            return sendResult;
+            //SystemSendMessage(100, processKey);
+            //autoEvent.WaitOne(1000);
+            //return sendResult;
+
+            return SystemNamedPipeMessage.Singleton.ProcessIsRuning(processKey);
         }
     }
+
+
+
+
+
 
     [Serializable]
     internal class SystemMessage
@@ -101,6 +150,9 @@ namespace ColorsWin.Process
         public int ProcessId { get; set; }
         public string Token { get; set; }
         public string Data { get; set; }
+        /// <summary>
+        /// 1表示启动消息，100表示判断进程
+        /// </summary>
         public int CmdType { get; set; }
         public DateTime Time { get; set; }
     }

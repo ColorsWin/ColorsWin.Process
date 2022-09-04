@@ -30,7 +30,7 @@ namespace ColorsWin.Process.NamedPipe
             {
                 // Wait service send message  then send  next message
                 var streamReader = new System.IO.StreamReader(pipeClient);
-                string returnVal = streamReader.ReadToEnd(); 
+                string returnVal = streamReader.ReadToEnd();
                 return returnVal == NamedPipeMessage.ReplyMessageFlat;
             }
 
@@ -42,13 +42,20 @@ namespace ColorsWin.Process.NamedPipe
             var data = ProcessMessageConfig.Encoding.GetBytes(message);
             if (!pipeClient.IsConnected)
             {
-                pipeClient.Connect(10000);
+                pipeClient.Connect(10 * 1000);
             }
             StreamHelper.WriteData(pipeClient, data, true);
             pipeClient.Flush();
             return true;
         }
 
+        public void Connect(int timeout = 2 * 1000)
+        {
+            if (!pipeClient.IsConnected)
+            {
+                pipeClient.Connect(timeout);
+            }
+        }
         #region IDisposable 成员
 
         bool _disposed = false;
