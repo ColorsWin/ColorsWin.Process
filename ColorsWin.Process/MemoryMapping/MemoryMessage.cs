@@ -95,13 +95,8 @@ namespace ColorsWin.Process
             if (eventWait != null)
             {
                 eventWait.Set();
-
-                //暂时未处理 批量快速发消息 会导致接受不全【写入速度过快，读取速度跟不上】
-
                 Thread.Sleep(ProcessMessageConfig.BatchSendWaitTime);
-
-                eventWait.Reset();//如果注释掉这句代码   A先发送消息,B在运行程序也会收到
-
+                eventWait.Reset();
                 return true;
             }
             return false;

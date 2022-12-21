@@ -48,7 +48,7 @@ namespace ColorsWin.Process.NamedPipe
             {
                 return;
             }
-            var message = ObjectSerializeHelper.Deserialize(data) as SystemMessage;
+            var message = SystemMessageSerializeHelper.Deserialize(data);
             if (message.ProcessId == GetProcessId())
             {
                 return;
@@ -72,7 +72,7 @@ namespace ColorsWin.Process.NamedPipe
             message.Time = DateTime.Now;
             LogHelper.Debug("Replay:" + message.Data + message.ProcessId);
             System.Threading.Thread.Sleep(50);
-            var data = ObjectSerializeHelper.Serialize(message);
+            var data = SystemMessageSerializeHelper.Serialize(message);
             SendData(data);
         }
 
@@ -84,7 +84,7 @@ namespace ColorsWin.Process.NamedPipe
             while (isRun)
             {
                 bool tempIsString;
-                var data = StreamHelper.ReadData(pipeClient, out tempIsString);     
+                var data = StreamHelper.ReadData(pipeClient, out tempIsString);
                 OnAcceptData(data);
                 if (!pipeClient.IsConnected)
                 {
@@ -92,7 +92,6 @@ namespace ColorsWin.Process.NamedPipe
                     break;
                 }
             }
-
             Console.WriteLine("客户端退出");
         }
 
@@ -113,7 +112,6 @@ namespace ColorsWin.Process.NamedPipe
                 {
                     Console.WriteLine(ex.Message);
                 }
-
             });
         }
 
@@ -124,7 +122,7 @@ namespace ColorsWin.Process.NamedPipe
             {
                 pipeClient.Connect(10000);
             }
-            StreamHelper.WriteData(pipeClient, message, false);           
+            StreamHelper.WriteData(pipeClient, message, false);
             return true;
         }
 
@@ -136,8 +134,6 @@ namespace ColorsWin.Process.NamedPipe
 
         private List<NamedPipeServerStream> serverPool = new List<NamedPipeServerStream>();
         private string pipName = "ColorsWin.PipName";
-
-
 
         protected NamedPipeServerStream CreateNamedPipeServerStream()
         {
@@ -175,7 +171,7 @@ namespace ColorsWin.Process.NamedPipe
 
         private bool SendSystemMessage(SystemMessage message, int millisecondsTimeout = 5 * 100)
         {
-            var data = ObjectSerializeHelper.Serialize(message);
+            var data = SystemMessageSerializeHelper.Serialize(message);
 
             bool result = false;
 
@@ -203,17 +199,16 @@ namespace ColorsWin.Process.NamedPipe
         {
             try
             {
-
                 StreamHelper.WriteData(pipeServer, data, false);
                 pipeServer.Flush();
 
-                Console.WriteLine("给客户端发送消息完毕");
+                Console.WriteLine("Send Client Done");
 
                 bool tempIsString;
                 var replayData = StreamHelper.ReadData(pipeServer, out tempIsString);
                 pipeServer.Flush();
 
-                var relpayMessage = ObjectSerializeHelper.Deserialize(replayData) as SystemMessage;
+                var relpayMessage = SystemMessageSerializeHelper.Deserialize(replayData);
                 if (message.CmdType == 100)
                 {
                     sendResult = message.Data == relpayMessage.Data;
@@ -228,7 +223,6 @@ namespace ColorsWin.Process.NamedPipe
                 serverPool.Remove(pipeServer);
                 Console.WriteLine(ex.Message);
             }
-
             return sendResult;
         }
 

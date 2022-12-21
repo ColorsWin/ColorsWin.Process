@@ -16,6 +16,7 @@ namespace ColorsWin.Process
 
         private const string ServiceTag = "ColorsWin.Service";
         private const string ClientTag = "ColorsWin.Client";
+
         public static void Init()
         {
             if (sysProcessMessageProxy != null)
@@ -30,7 +31,7 @@ namespace ColorsWin.Process
 
         private static void OnSystemMessage(byte[] data)
         {
-            var message = ObjectSerializeHelper.Deserialize(data) as SystemMessage;
+            var message = SystemMessageSerializeHelper.Deserialize(data);
             if (message.ProcessId == GetProcessId())
             {
                 return;
@@ -50,12 +51,12 @@ namespace ColorsWin.Process
             {
                 if (message.Data == ServiceTag)
                 {
-                    LogHelper.Debug("收到服务器启动消息:------" + "开始连接服务器");
+                    LogHelper.Debug("Service Start:------" + " to connetion");
                     SystemNamedPipeMessage.Singleton.Connect();
                 }
                 else
                 {
-                    LogHelper.Debug("收到客户端启动消息:------");
+                    LogHelper.Debug("Client Start:------");
                 }
             }
             else if (message.CmdType == 100)
@@ -77,20 +78,20 @@ namespace ColorsWin.Process
             message.ProcessId = GetProcessId();
             message.Time = DateTime.Now;
             LogHelper.Debug("Replay:" + message.Data + message.ProcessId);
-            System.Threading.Thread.Sleep(50);
+            Thread.Sleep(50);
             SendSystemMessage(message);
         }
 
         private static void SendSystemMessage(SystemMessage message)
         {
-            var data = ObjectSerializeHelper.Serialize(message);
+            var data = SystemMessageSerializeHelper.Serialize(message);
             sysProcessMessageProxy.SendData(data);
         }
 
         private static AutoResetEvent autoEvent = new AutoResetEvent(false);
         private static string Token = null;
         private static bool sendResult = false;
-        internal static void SystemSendMessage(int cmd, string data)
+        internal static void SystemSendMessage(SystemCmdType cmd, string data)
         {
             sendResult = false;
             Token = Guid.NewGuid().ToString();
@@ -98,7 +99,7 @@ namespace ColorsWin.Process
             {
                 ProcessId = GetProcessId(),
                 Token = Token,
-                CmdType = cmd,
+                CmdType = (int)cmd,
                 Time = DateTime.Now,
                 Data = data
             };
@@ -106,8 +107,6 @@ namespace ColorsWin.Process
 
             //  LogHelper.Debug("SendSystemMessage::" + data + message.ProcessId);
         }
-
-
 
         internal static void Start()
         {
@@ -121,11 +120,7 @@ namespace ColorsWin.Process
             {
                 SystemNamedPipeMessage.Singleton.Connect();
             }
-
-            SystemSendMessage(1, startTag); 
-           
-
-            LogHelper.Debug("程序启动::" + startTag);
+            SystemSendMessage(SystemCmdType.Start, startTag);
         }
 
 
@@ -134,14 +129,10 @@ namespace ColorsWin.Process
             //SystemSendMessage(100, processKey);
             //autoEvent.WaitOne(1000);
             //return sendResult;
-
             return SystemNamedPipeMessage.Singleton.ProcessIsRuning(processKey);
         }
+
     }
-
-
-
-
 
 
     [Serializable]
@@ -150,10 +141,13 @@ namespace ColorsWin.Process
         public int ProcessId { get; set; }
         public string Token { get; set; }
         public string Data { get; set; }
-        /// <summary>
-        /// 1表示启动消息，100表示判断进程
-        /// </summary>
         public int CmdType { get; set; }
         public DateTime Time { get; set; }
+    }
+
+    public enum SystemCmdType
+    {
+        Start = 1,
+        IsRuning = 100
     }
 }
