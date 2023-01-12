@@ -1,7 +1,9 @@
 ﻿using ColorsWin.Process.Helpers;
 using ColorsWin.Process.Win32;
 using System;
+using System.Collections.Generic;
 using System.Security.Principal;
+using System.Threading;
 
 namespace ColorsWin.Process
 {
@@ -96,6 +98,31 @@ namespace ColorsWin.Process
                 processs.Close();
                 return outPut;
             }
+        }
+
+
+        static Dictionary<string, Mutex> mutexs=new Dictionary<string, Mutex> ();
+        public static void RuningProcess(string processKey)
+        {
+            var mutex = new Mutex(true, processKey);
+            mutexs.Add(processKey, mutex);
+        }
+
+        public static bool IsRuningEx(string processKey)
+        {
+            try
+            {
+                Mutex.OpenExisting(processKey);
+                return true;
+
+                //Mutex mutex;
+                //return Mutex.TryOpenExisting(processKey, out mutex);
+            }
+            catch (Exception)
+            {
+                //return false;
+            }
+            return false;
         }
     }
 }
