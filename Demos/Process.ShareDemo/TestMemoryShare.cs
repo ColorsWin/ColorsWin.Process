@@ -18,9 +18,9 @@ namespace Process.ShareTest
 
         public static void OutPut()
         {
-            HadRun("TestProcess_Key");
+            // HadRun("TestProcess_Key");
             BaseTest.TestSend();
-           // BaseTest.TestBatchSend();
+            // BaseTest.TestBatchSend();
         }
 
         public static void BaseOutput()

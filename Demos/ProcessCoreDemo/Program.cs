@@ -9,11 +9,7 @@ namespace ProcessCoreDemo
     {
         static void Main(string[] args)
         {
-            TestNamedPipe.Test(false);
-
-            //TestNamedPipe.OutPut();
-            //System.Threading.Thread.Sleep(1000);
-            //  TestMemoryShare.OutPut();
+            ManagerTest.Output();
             Console.Read();
         }
     }

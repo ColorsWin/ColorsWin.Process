@@ -8,8 +8,7 @@ namespace Process.ShareTest
         public static void TestSend()
         {
             var processKey = "processKey_" + ProcessMessageConfig.ProcessMessageType;
-            bool isRun = ProcessHelper.HadRun(processKey);
-            isRun = false;
+            bool isRun = ProcessHelper.HadRun(processKey);          
             if (isRun)
             {
                 StartSend(processKey);
