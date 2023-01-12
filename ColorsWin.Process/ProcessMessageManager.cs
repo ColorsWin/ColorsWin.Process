@@ -20,8 +20,7 @@ namespace ColorsWin.Process
             {
                 return;
             }
-            allMessageProxy = new Dictionary<string, ProcessMessageProxy>();
-            SystemMessageManager.Init();
+            allMessageProxy = new Dictionary<string, ProcessMessageProxy>();            
         }
 
 
@@ -143,12 +142,17 @@ namespace ColorsWin.Process
             return ReadMessage(defaultProcessKey);
         }
 
+        public static void AcceptMessage(Action<string> messageAction, bool resetAction = false)
+        {
+            InitProcessMessage(defaultProcessKey, messageAction, resetAction);
+            allMessageProxy[defaultProcessKey].InitMessage();
+        }
+
         public static bool SendMessage(string message)
         {
             return SendMessage(defaultProcessKey, message);
         }
 
         #endregion
-
     }
 }

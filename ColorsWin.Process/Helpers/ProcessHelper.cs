@@ -65,10 +65,10 @@ namespace ColorsWin.Process
         }
 
 
-        public static bool IsRuning(string processKey)
-        {
-            return SystemMessageManager.ProcessIsRuning(processKey);
-        }
+        //public static bool IsRuning(string processKey)
+        //{
+        //    return SystemMessageManager.ProcessIsRuning(processKey);
+        //}
 
 
         public static string RunCMDCommand(params string[] commandLine)
@@ -108,7 +108,7 @@ namespace ColorsWin.Process
             mutexs.Add(processKey, mutex);
         }
 
-        public static bool IsRuningEx(string processKey)
+        public static bool IsRuning(string processKey)
         {
             try
             {

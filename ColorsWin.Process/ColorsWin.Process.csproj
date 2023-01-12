@@ -38,6 +38,8 @@ also includes  some process class help		</PackageReleaseNotes>
 
 	<ItemGroup>
 	  <Compile Remove="Helpers\ByteConvertHelper.cs" />
+	  <Compile Remove="NamedPipe\SystemNamedPipeMessage.cs" />
+	  <Compile Remove="SystemMessage.cs" />
 	</ItemGroup>
 
 
