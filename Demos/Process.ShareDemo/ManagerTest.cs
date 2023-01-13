@@ -6,14 +6,20 @@ namespace Process.ShareTest
     {
         public static void Output()
         {
+            bool isAdmmin = ProcessHelper.IsRunAsAdmin();
+            if (isAdmmin)
+            {
+                System.Console.WriteLine("Admin");
+            }
+
             //TestFile.OutPut();
-            //TestMemoryShare.OutPut();
+            TestMemoryShare.OutPut();
             //TestNamedPipe.OutPut();
 
             //TestWinService.RunClient();
-            //return;
 
-            bool isAdmmin = ProcessHelper.IsRunAsAdmin();
+            return;
+
             if (isAdmmin)
             {
                 System.Console.WriteLine("服务端");
