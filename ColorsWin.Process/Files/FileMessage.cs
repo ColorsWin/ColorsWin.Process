@@ -33,6 +33,19 @@ namespace ColorsWin.Process
                 var watcher = new FileWatcher(OnDataChange);
                 watcher.Start(tempDataFolederPath, GetFileName());
             }
+            else
+            {
+                bool isAdmmin = ProcessHelper.IsRunAsAdmin();
+                if (isAdmmin)
+                {
+                    if (!Directory.Exists(tempDataFolederPath))
+                    {
+                        Directory.CreateDirectory(tempDataFolederPath);
+                    }
+
+                    SecurityHelper.AddSecurity(tempDataFolederPath);
+                }
+            }
         }
 
         private void OnDataChange(object sender, FileSystemEventArgs e)
@@ -90,7 +103,7 @@ namespace ColorsWin.Process
             Thread.Sleep(ProcessMessageConfig.BatchSendWaitTime);
 
             string fullPath = Path.Combine(tempDataFolederPath, GetFileName());
-            using (var fs = new FileStream(fullPath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+            using (var fs = new FileStream(fullPath, FileMode.OpenOrCreate, FileAccess.Write))
             {
                 fs.Position = 0;
                 StreamHelper.WriteData(fs, data, isString);

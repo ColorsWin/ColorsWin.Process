@@ -7,6 +7,9 @@ namespace ProcessDemo
     {
         static void Main(string[] args)
         {
+            //Example.Test();
+            //TestMemoryMappedFileSecurity.Output();
+
             ManagerTest.Output();
             Console.Read();
         }

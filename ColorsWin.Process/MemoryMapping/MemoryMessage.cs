@@ -21,18 +21,15 @@ namespace ColorsWin.Process
 
         private string GetProcessKey(string appendTag = null)
         {
-            bool isAdmmin = ProcessHelper.IsRunAsAdmin();
+            //bool isAdmmin = ProcessHelper.IsRunAsAdmin();
             var tag = ProcessMessageConfig.GlobalTag;
-            if (!isAdmmin)
-            {
-                tag = "";
-            }
             return tag + processKey + appendTag;
         }
 
         private void Init(bool read)
         {
             memoryFile = MemoryMappedFileHelper.CreateMemoryMappedFileObj(GetProcessKey(MemoryMappedFileNameTag));
+
             eventWait = EventWaitHandleHelper.CreateEventHande(GetProcessKey(EventWaitNameTag), read);
 
             if (read)
@@ -51,7 +48,11 @@ namespace ColorsWin.Process
                 {
                     if (AcceptMessage != null)
                     {
-                        var message = ProcessMessageConfig.Encoding.GetString(data);
+                        string message = string.Empty;
+                        if (data != null)
+                        {
+                            message = ProcessMessageConfig.Encoding.GetString(data);
+                        }
                         AcceptMessage(message);
                     }
                 }

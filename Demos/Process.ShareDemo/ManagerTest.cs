@@ -1,4 +1,6 @@
-﻿namespace Process.ShareTest
+﻿using ColorsWin.Process;
+
+namespace Process.ShareTest
 {
     class ManagerTest
     {
@@ -8,7 +10,19 @@
             //TestMemoryShare.OutPut();
             //TestNamedPipe.OutPut();
 
-            TestWinService.RunClient();
+            //TestWinService.RunClient();
+            //return;
+
+            bool isAdmmin = ProcessHelper.IsRunAsAdmin();
+            if (isAdmmin)
+            {
+                System.Console.WriteLine("服务端");
+                TestWinService.RunService();
+            }
+            else
+            {
+                TestWinService.RunClient();
+            }
         }
     }
 }

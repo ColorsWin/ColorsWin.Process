@@ -14,13 +14,13 @@ namespace ColorsWin.Process
             Init();
         }
 
-        public static void Init()
+        private static void Init()
         {
             if (allMessageProxy != null)
             {
                 return;
             }
-            allMessageProxy = new Dictionary<string, ProcessMessageProxy>();            
+            allMessageProxy = new Dictionary<string, ProcessMessageProxy>();
         }
 
 
@@ -67,6 +67,12 @@ namespace ColorsWin.Process
         {
             InitProcessMessage(processKey);
             return allMessageProxy[processKey].SendData(data);
+        }
+
+        public static void CreateProcessKey(string processKey)
+        {
+            InitProcessMessage(processKey);
+            allMessageProxy[processKey].InitMessageType(false);
         }
 
         public static void InitMessageType(string processKey, ProcessMessageType processMessageType = ProcessMessageType.ShareMemory)

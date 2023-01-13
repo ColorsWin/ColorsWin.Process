@@ -3,7 +3,7 @@ using System.IO.MemoryMappedFiles;
 
 namespace ColorsWin.Process
 {
-   
+
     public class MemoryMappedByStream : MemoryMappedFileObj
     {
         private MemoryMappedViewStream viewStream = null;
@@ -11,9 +11,16 @@ namespace ColorsWin.Process
         public MemoryMappedByStream(string name) : base(name)
         {
             viewStream = file.CreateViewStream();
+            //if (isRead)
+            //{
+            //    viewStream = file.CreateViewStream(0, fileSize, MemoryMappedFileAccess.Read);
+            //}
+            //else
+            //{
+            //    viewStream = file.CreateViewStream();
+            //}
         }
-        
-       
+
         public override void WriteData(byte[] data)
         {
             viewStream.Position = 0;

@@ -124,7 +124,7 @@ namespace ColorsWin.Process
             }
         }
 
-        private void InitMessageType(bool read)
+        internal void InitMessageType(bool read)
         {
             switch (processMessageType)
             {

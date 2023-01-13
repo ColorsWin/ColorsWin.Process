@@ -16,7 +16,13 @@ namespace ColorsWin.Process
 
         public static ProcessMessageType ProcessMessageType { get; set; } = ProcessMessageType.ShareMemory;
 
-        internal static string GlobalTag = "Global\\";
+        /// <summary>
+        /// If it is a window service, the string needs to use "Global\\". 
+        /// Note If the current user is not an administrator, the window service needs to be run first, 
+        /// and the process key must be created in the window service first, 
+        /// because ordinary users do not have permission to create the process key starting with "Global\\"
+        /// </summary>
+        public static string GlobalTag = "";
 
         public static int BatchSendWaitTime = 5;
 

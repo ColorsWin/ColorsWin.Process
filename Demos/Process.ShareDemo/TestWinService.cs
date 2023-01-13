@@ -6,21 +6,30 @@ namespace Process.ShareTest
 {
     class TestWinService
     {
-        private static string processCommandLineTag = "ProcessCommandLineTag";
-        private static string processCommandLine = "ProcessCommandLine";
-        private static string processCommandLineResult = "processCommandLineResult";
+        private static string processCommandLineTag = "ProcessCommandLineTag3";
+        private static string processCommandLine = "ProcessCommandLine3";
+        private static string processCommandLineResult = "processCommandLineResult3";
 
         static TestWinService()
         {
-            ProcessMessageManager.InitMessageType(processCommandLineTag, ProcessMessageType.File);
-            ProcessMessageManager.InitMessageType(processCommandLine, ProcessMessageType.File);
-            ProcessMessageManager.InitMessageType(processCommandLineResult, ProcessMessageType.File);
+            ProcessMessageConfig.GlobalTag = "Global\\";
+
+            //ProcessMessageManager.InitMessageType(processCommandLineTag, ProcessMessageType.File);
+            //ProcessMessageManager.InitMessageType(processCommandLine, ProcessMessageType.File);
+            //ProcessMessageManager.InitMessageType(processCommandLineResult, ProcessMessageType.File);
         }
+
 
         public static void RunService()
         {
             ProcessMessageConfig.Log = new FileLog("d:\\log.txt");
-            ProcessMessageManager.SendMessage(processCommandLineTag, DateTime.Now.ToString() + "_Runing");
+
+            // Client use the process key send message  
+            ProcessMessageManager.CreateProcessKey(processCommandLineResult);
+
+            string message = DateTime.Now.ToString() + "_Runing";
+            LogHelper.Debug("Service Send Message:" + message);
+            ProcessMessageManager.SendMessage(processCommandLineTag, message);
 
             try
             {
@@ -34,37 +43,45 @@ namespace Process.ShareTest
 
         public static void StopService()
         {
+            string message = DateTime.Now + " Action Stop ";
+            LogHelper.Debug("Service Send Message:" + message);
+            ProcessMessageManager.SendMessage(processCommandLineResult, message);
+
             ProcessMessageManager.SendMessage(processCommandLineTag, "");
         }
 
         private static void InvokeCommand(string arg)
         {
-            LogHelper.Debug("Message:" + arg);
+            LogHelper.Debug("Service Accept Message:" + arg);
+            System.Threading.Thread.Sleep(new Random().Next(10, 50));
 
-            System.Threading.Thread.Sleep(new Random().Next(10, 600));
 
-            ProcessMessageManager.SendMessage(processCommandLineResult, DateTime.Now + " Action Dome");
+            string message = DateTime.Now + " Action Message";
+            LogHelper.Debug("Service Send Message:" + message);
+            ProcessMessageManager.SendMessage(processCommandLineResult, message);
         }
 
         public static void RunClient()
         {
             var isRun = ProcessMessageManager.ReadMessage(processCommandLineTag);
-
             if (string.IsNullOrEmpty(isRun))
             {
                 Console.WriteLine("WinService is not run");
-                return;
+                //return;
+            }
+            else
+            {
+                Console.WriteLine("WinService is  runing");
+
+                string messageData = DateTime.Now + ":----Test----";
+                Console.WriteLine("begin Send" + messageData);
+                ProcessMessageManager.SendMessage(processCommandLine, messageData);
             }
 
-            string messageData = DateTime.Now + ":----Test----";
-            Console.WriteLine("begin Send" + messageData);
-
-            ProcessMessageManager.SendMessage(processCommandLine, messageData);
-            ProcessMessageManager.AcceptMessage(processCommandLineResult, (message) =>
+            ProcessMessageManager.AcceptMessage(processCommandLineResult, (m) =>
             {
-                Console.WriteLine("Accept Message:" + message);
+                Console.WriteLine("收到消息" + m);
             });
         }
-
     }
 }

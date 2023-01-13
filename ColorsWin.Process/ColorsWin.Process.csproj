@@ -6,15 +6,18 @@
 		<Version>1.0.10</Version>
 		<PackageIconUrl>https://multicolorwin.oss-cn-beijing.aliyuncs.com/image/256.png</PackageIconUrl>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Description>Communication between processes, through memory sharing, named pipes, files, sending messages
-also includes  some process class help
+		<Description>
+			Communication between processes, through memory sharing, named pipes, files, sending messages
+			also includes  some process class help
 		</Description>
 		<PackageTags>Process,ProcessCommunication,Messages</PackageTags>
 		<PackageProjectUrl>https://github.com/ColorsWin/ColorsWin.Process</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ColorsWin/ColorsWin.Process</RepositoryUrl>
 		<Copyright>Copyright 2022</Copyright>
-		<PackageReleaseNotes>Communication between processes, through memory sharing, named pipes, files, sending messages
-also includes  some process class help		</PackageReleaseNotes>
+		<PackageReleaseNotes>
+			Communication between processes, through memory sharing, named pipes, files, sending messages
+			also includes  some process class help
+		</PackageReleaseNotes>
 		<RepositoryType>MIT</RepositoryType>
 		<FileVersion>1.0.10.0</FileVersion>
 		<Authors>ColorsWin</Authors>
@@ -29,18 +32,11 @@ also includes  some process class help		</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net40|AnyCPU'">
-	  <DefineConstants>TRACE</DefineConstants>
+		<DefineConstants>TRACE</DefineConstants>
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
 		<PackageReference Include="System.Security.Principal.Windows" Version="5.0.0" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Compile Remove="Helpers\ByteConvertHelper.cs" />
-	  <Compile Remove="NamedPipe\SystemNamedPipeMessage.cs" />
-	  <Compile Remove="SystemMessage.cs" />
-	</ItemGroup>
-
+	</ItemGroup> 
 
 </Project>
