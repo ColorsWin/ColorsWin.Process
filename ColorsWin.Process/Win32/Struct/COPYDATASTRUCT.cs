@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 
 namespace ColorsWin.Process.Win32.Struct
 {
@@ -18,7 +17,7 @@ namespace ColorsWin.Process.Win32.Struct
         /// </summary>
         public IntPtr lpData;
 
-        ///下面定义容易乱码
+        ///Chinese garbled code
         //[MarshalAs(UnmanagedType.LPStr)]
         //public string lpData;
     }

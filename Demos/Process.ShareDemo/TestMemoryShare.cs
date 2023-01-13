@@ -5,23 +5,12 @@ namespace Process.ShareTest
 {
     public class TestMemoryShare
     {
-        private static bool HadRun(string processKey)
-        {
-            var defaultData = ProcessMessageManager.ReadMessage(processKey);
-            bool isRun = !string.IsNullOrEmpty(defaultData);
-            if (!isRun)
-            {
-                ProcessMessageManager.SendMessage(processKey, "Runing");
-            }
-            return isRun;
-        }
-
         public static void OutPut()
         {
             // HadRun("TestProcess_Key");
             BaseTest.TestSend();
             // BaseTest.TestBatchSend();
-        }
+        }        
 
         public static void BaseOutput()
         {
@@ -30,33 +19,33 @@ namespace Process.ShareTest
 
             ProcessMessageManager.AllMessageEvent += (key, message) =>
             {
-                Console.WriteLine($"AllMessage-进程Key:{key}---消息为:----" + message);
+                Console.WriteLine($"Accept Message By AllMessageEvent,ProcessKey:{key}---Content:----" + message);
             };
 
-            ProcessMessageManager.AcceptMessage(processKey, (item) =>
+            ProcessMessageManager.AcceptMessage(processKey, (message) =>
             {
-                Console.WriteLine(processKey + "监听--------" + item);
+                Console.WriteLine(processKey + "  Accept Message--------" + message);
             });
 
             ProcessMessageManager.AcceptMessage(processKey, (item) =>
             {
-                Console.WriteLine(processKey + "监听[第二次]---------" + item);
+                Console.WriteLine(processKey + "  Accept Message【2】---------" + item);
             });
 
             //ProcessMessageManager.ListenMessage(processKey, (item) =>
             //{
-            //    Console.WriteLine(processKey + "监听[屏蔽之前消息]---------" + item);
+            //    Console.WriteLine(processKey + " Accept Message【New】---------" + item);
             //}, true);
 
 
             ProcessMessageManager.AcceptMessage(processKey2, (item) =>
             {
-                Console.WriteLine(processKey2 + "监听--------" + item);
+                Console.WriteLine(processKey2 + "  Accept Message------" + item);
             });
 
-            ProcessMessageManager.SendMessage(processKey, " 你好 进程1");
+            ProcessMessageManager.SendMessage(processKey, " Hello Word");
 
-            ProcessMessageManager.SendMessage(processKey2, " 我是进程2");
+            ProcessMessageManager.SendMessage(processKey2, " Hello C#");
         }
     }
 }

@@ -35,6 +35,7 @@ namespace ColorsWin.Process.Helpers
             return contentData;
         }
 
+
         #region Owner Format
 
         // 前面4个字节存储数组个数N, N里面每一个占用4个字节存储每个字符串字节大小

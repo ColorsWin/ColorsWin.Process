@@ -12,7 +12,7 @@ namespace ColorsWin.Process
         private const int SW_SHOWNOMAL = 1;
         private static MemoryMappedFileObj fileMapped;
         private static string handlFlat = "WindowHandel";
-        private static System.Threading.Mutex mutex;
+        private static Mutex mutex;
 
         public static bool IsRunAsAdmin()
         {
@@ -27,7 +27,7 @@ namespace ColorsWin.Process
             //guid += Assembly.GetEntryAssembly().GetCustomAttributes(false).OfType<AssemblyProductAttribute>().FirstOrDefault().Product;
 
             bool createNew;
-            mutex = new System.Threading.Mutex(true, key, out createNew);
+            mutex = new Mutex(true, key, out createNew);
             return !createNew;
         }
 
@@ -64,13 +64,6 @@ namespace ColorsWin.Process
             return handRun;
         }
 
-
-        //public static bool IsRuning(string processKey)
-        //{
-        //    return SystemMessageManager.ProcessIsRuning(processKey);
-        //}
-
-
         public static string RunCMDCommand(params string[] commandLine)
         {
             using (var processs = new System.Diagnostics.Process())
@@ -88,10 +81,6 @@ namespace ColorsWin.Process
                 }
                 processs.StandardInput.WriteLine("&exit");
 
-                //如果不执行exit命令，后面调用ReadToEnd()方法会假死
-                // 这里使用 & 是批处理命令的符号，表示前面一个命令不管是否执行成功都执行后面(exit)命令，          
-                //还有&&和||前者表示必须前一个命令执行成功才会执行后面的命令，后者表示必须前一个命令执行失败才会执行后面的命令
-
                 processs.StandardInput.AutoFlush = true;
                 var outPut = processs.StandardOutput.ReadToEnd();
                 processs.WaitForExit();
@@ -101,7 +90,8 @@ namespace ColorsWin.Process
         }
 
 
-        static Dictionary<string, Mutex> mutexs=new Dictionary<string, Mutex> ();
+        private static Dictionary<string, Mutex> mutexs = new Dictionary<string, Mutex>();
+
         public static void RuningProcess(string processKey)
         {
             var mutex = new Mutex(true, processKey);
@@ -120,7 +110,7 @@ namespace ColorsWin.Process
             }
             catch (Exception)
             {
-                //return false;
+
             }
             return false;
         }

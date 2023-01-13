@@ -53,8 +53,5 @@ namespace ColorsWin.Process.Helpers
         {
             ProcessMessageConfig.Log?.WriteException(ex, message);
         }
-
-
-
     }
 }

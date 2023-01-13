@@ -16,19 +16,17 @@ namespace Process.ShareTest
             TestMemoryShare.OutPut();
             //TestNamedPipe.OutPut();
 
+            //Run ProcessServiceDemo Test RunService
             //TestWinService.RunClient();
 
-            return;
-
-            if (isAdmmin)
-            {
-                System.Console.WriteLine("服务端");
-                TestWinService.RunService();
-            }
-            else
-            {
-                TestWinService.RunClient();
-            }
+            //if (isAdmmin)
+            //{          
+            //    TestWinService.RunService();
+            //}
+            //else
+            //{
+            //    TestWinService.RunClient();
+            //}
         }
     }
 }

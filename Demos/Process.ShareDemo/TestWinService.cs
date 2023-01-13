@@ -80,7 +80,7 @@ namespace Process.ShareTest
 
             ProcessMessageManager.AcceptMessage(processCommandLineResult, (m) =>
             {
-                Console.WriteLine("收到消息" + m);
+                Console.WriteLine("Accept Message:" + m);
             });
         }
     }
