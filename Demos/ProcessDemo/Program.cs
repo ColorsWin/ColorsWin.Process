@@ -7,8 +7,8 @@ namespace ProcessDemo
     {
         static void Main(string[] args)
         {
-            //Example.Test();
-            ManagerTest.Output();
+            OtherTest.Output();
+            //ManagerTest.Output();
             Console.Read();
         }
     }

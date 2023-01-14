@@ -4,25 +4,14 @@ using System;
 using System.Runtime.InteropServices;
 
 namespace ColorsWin.Process.Helpers
-{   
+{
     public class ProcessExHelper
     {
-        /// <summary>
-        ///  模拟父进程打开进程
-        /// </summary>
-        /// <param name="parentProcessId">父进程id</param>
-        /// <param name="appPath">子程序路径</param>
-        /// <param name="commandLine">调用传递参数</param>
-        /// <returns>成功后返回子进程id，失败返回0</returns>
         public static int Run(int parentProcessId, string appPath, string commandLine = null)
         {
-            // STARTUPINFOEX members
             const int PROC_THREAD_ATTRIBUTE_PARENT_PROCESS = 0x00020000;
-
-            // dwCreationFlags
             const uint EXTENDED_STARTUPINFO_PRESENT = 0x00080000;
             const uint CREATE_NEW_CONSOLE = 0x00000010;
-
             var pInfo = new PROCESS_INFORMATION();
             var siEx = new STARTUPINFOEX();
 
@@ -52,7 +41,6 @@ namespace ColorsWin.Process.Helpers
                 return pInfo.dwProcessId;
             }
             return 0;
-            //var stringPid = pInfo.dwProcessId.ToString();
         }
     }
 }

@@ -1,67 +1,76 @@
 ﻿using System;
+using System.IO;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace ColorsWin.Process.Helpers
 {
     public class ByteConvertHelper
     {
-        /// <summary>
-        /// 将对象转换为byte数组
-        /// </summary>
-        /// <param name="obj">被转换对象</param>
-        /// <returns>转换后byte数组</returns>
-        public static byte[] Object2Bytes(object obj)
+        #region Struct And Bytes
+
+        public static byte[] StructToBytes<T>(T structure) where T : struct
         {
+            Int32 size = Marshal.SizeOf(structure);
+            Console.WriteLine(size);
+            IntPtr buffer = Marshal.AllocHGlobal(size);
+            try
+            {
+                Marshal.StructureToPtr(structure, buffer, false);
+                byte[] bytes = new byte[size];
+                Marshal.Copy(buffer, bytes, 0, size);
+                return bytes;
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(buffer);
+            }
+        }
 
-            //对象转IntPtr
-            var handle = GCHandle.Alloc(obj);
-            var ptr = GCHandle.ToIntPtr(handle);
+        public static T BytesToStruct<T>(byte[] bytes) where T : struct
+        {
+            Type strcutType = typeof(T);
+            Int32 size = Marshal.SizeOf(strcutType);
+            IntPtr buffer = Marshal.AllocHGlobal(size);
+            try
+            {
+                Marshal.Copy(bytes, 0, buffer, size);
+                return (T)Marshal.PtrToStructure(buffer, strcutType);
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(buffer);
+            }
+        }
+        #endregion
 
-            //IntPtr转对象
-            //var a = GCHandle.FromIntPtr(ptr).Target;
-            //handle.Free();
+        #region Object And Bytes
 
-            byte[] buff = new byte[128];
-            Marshal.Copy(ptr, buff, 0, buff.Length);
-
-            //IntPtr ptr2 = IntPtr.Zero;
-            //Marshal.Copy(buff, 0, ptr2, buff.Length);
-
-            //var object2 = GCHandle.FromIntPtr(ptr2).Target;
-
-            //byte[] buff = new byte[Marshal.SizeOf(obj)];
-            //IntPtr ptr = Marshal.UnsafeAddrOfPinnedArrayElement(buff, 0);
-            // Marshal.StructureToPtr(obj, ptr, true);
-
-
+        public static byte[] ObjectToBytes<T>(T obj)
+        {
+            byte[] buff;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                IFormatter iFormatter = new BinaryFormatter();
+                iFormatter.Serialize(ms, obj);
+                buff = ms.GetBuffer();
+            }
             return buff;
         }
 
-        /// <summary>
-        /// 将byte数组转换成对象
-        /// </summary>
-        /// <param name="buff">被转换byte数组</param>
-        /// <param name="typ">转换成的类名</param>
-        /// <returns>转换完成后的对象</returns>
-        public static object Bytes2Object(byte[] buff, Type typ)
+
+        public static T BytesToObject<T>(byte[] buff)
         {
-            IntPtr ptr = Marshal.UnsafeAddrOfPinnedArrayElement(buff, 0);
-            return Marshal.PtrToStructure(ptr, typ);
+            var obj = default(T);
+            using (MemoryStream ms = new MemoryStream(buff))
+            {
+                IFormatter iFormatter = new BinaryFormatter();
+                obj = (T)iFormatter.Deserialize(ms);
+            }
+            return obj;
         }
 
-        public static T Bytes2Object<T>(byte[] buff)
-        {
-            //GCHandle pinnedArray = GCHandle.Alloc(buff, GCHandleType.Pinned);
-            //IntPtr pointer = pinnedArray.AddrOfPinnedObject();
-
-            //IntPtr ptr2 = IntPtr.Zero;
-            //Marshal.Copy(buff, 0, ptr2, buff.Length);
-
-            //var object2 = GCHandle.FromIntPtr(ptr2).Target;
-
-            IntPtr ptr = Marshal.UnsafeAddrOfPinnedArrayElement(buff, 0);
-            //var a = GCHandle.FromIntPtr(ptr).Target;
-            return (T)Marshal.PtrToStructure(ptr, typeof(T));
-        }
+        #endregion 
     }
 }

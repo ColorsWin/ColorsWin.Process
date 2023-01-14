@@ -56,7 +56,8 @@ namespace ColorsWin.Process.NamedPipe
                 pipeClient.Connect(timeout);
             }
         }
-        #region IDisposable 成员
+
+        #region IDisposable  
 
         bool _disposed = false;
         public void Dispose()
