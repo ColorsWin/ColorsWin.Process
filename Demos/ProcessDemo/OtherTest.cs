@@ -12,10 +12,31 @@ namespace ProcessDemo
             //var data = ByteConvertHelper.StructToBytes(info);
             //var info2 = ByteConvertHelper.BytesToStruct<TestInfo>(data);
 
+            var intData = ByteConvertHelper.ToBytes(int.MaxValue);
+
+            var intValue = ByteConvertHelper.FormBytes<int>(intData);
+
+            //error
+            //var intValue2 = ByteConvertHelper.FormBytes<long>(intData);
+
+
+            var stringData = ByteConvertHelper.ToBytes("大神你好");
+            var stringValue = ByteConvertHelper.FormBytes<string>(stringData);
+
+
+            var decimalData = ByteConvertHelper.ToBytes(5.0M);
+            var decimalValue = ByteConvertHelper.FormBytes<decimal>(decimalData);
+
+            var dateTimeData = ByteConvertHelper.ToBytes(DateTime.Now);
+            var dateTimeValue = ByteConvertHelper.FormBytes<DateTime>(dateTimeData);
 
             var student = new StudentInfo { Id = 20, Name = "David" };
-            var studentData = ByteConvertHelper.ObjectToBytes(student);
-            var student2 = ByteConvertHelper.BytesToObject<StudentInfo>(studentData);
+            var studentData = ByteConvertHelper.ToBytes(student);
+            var studentValue = ByteConvertHelper.FormBytes<StudentInfo>(studentData);
+
+
+            //var studentData = ByteConvertHelper.ObjectToBytes(student);
+            //var student2 = ByteConvertHelper.BytesToObject<StudentInfo>(studentData);
         }
     }
 
@@ -26,7 +47,7 @@ namespace ProcessDemo
         public int Id;
     }
 
-    [Serializable]
+    //[Serializable]
     public struct StudentInfo
     {
         public string Name;
