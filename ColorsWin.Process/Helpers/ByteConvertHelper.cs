@@ -4,6 +4,9 @@ using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Linq;
 
 namespace ColorsWin.Process.Helpers
 {
@@ -14,7 +17,6 @@ namespace ColorsWin.Process.Helpers
         public static byte[] StructToBytes<T>(T structure) where T : struct
         {
             Int32 size = Marshal.SizeOf(structure);
-            Console.WriteLine(size);
             IntPtr buffer = Marshal.AllocHGlobal(size);
             try
             {
@@ -74,9 +76,18 @@ namespace ColorsWin.Process.Helpers
 
         #endregion
 
-
-
         public static byte[] ToBytes<T>(T obj)
+        {
+            return ByteConverManager.ToBytes(obj);
+        }
+
+        public static T FormBytes<T>(byte[] bytes)
+        {
+            return ByteConverManager.FormBytes<T>(bytes);
+        }
+
+        //#if Old
+        public static byte[] ToBytes2<T>(T obj)
         {
             byte[] data = null;
             var type = typeof(T);
@@ -136,7 +147,7 @@ namespace ColorsWin.Process.Helpers
                     var longDate = Convert.ToDateTime(obj);
                     data = BitConverter.GetBytes(longDate.Ticks);
                 }
-                else if (type.IsPrimitive)
+                else if (!type.IsPrimitive)
                 {
                     int size = Marshal.SizeOf(obj);
                     IntPtr buffer = Marshal.AllocHGlobal(size);
@@ -160,8 +171,7 @@ namespace ColorsWin.Process.Helpers
             return data;
         }
 
-
-        public static T FormBytes<T>(byte[] bytes)
+        public static T FormBytes2<T>(byte[] bytes)
         {
             object data = null;
             var type = typeof(T);
@@ -222,7 +232,7 @@ namespace ColorsWin.Process.Helpers
 
                     data = new DateTime(longDate);
                 }
-                else if (type.IsPrimitive)
+                else if (!type.IsPrimitive)
                 {
                     int size = Marshal.SizeOf(type);
                     IntPtr buffer = Marshal.AllocHGlobal(size);
@@ -248,5 +258,32 @@ namespace ColorsWin.Process.Helpers
             }
             return (T)data;
         }
+//#endif
+
+
+    }
+
+
+    public class TypeToByteAttribute : Attribute
+    {
+
+        public Type Type1 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool NotSystem { get; set; }
+    }
+
+
+    public class TypeFromByteAttribute : Attribute
+    {
+
+        public Type Type1 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool NotSystem { get; set; }
     }
 }

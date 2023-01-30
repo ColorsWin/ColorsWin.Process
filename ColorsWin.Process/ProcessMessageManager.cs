@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ColorsWin.Process.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -45,6 +46,19 @@ namespace ColorsWin.Process
             allMessageProxy[processKey].InitMessage();
         }
 
+        public static void AcceptData<T>(string processKey, Action<T> messageAction, bool resetAction = false)
+        {
+            Action<byte[]> action = (byte[] data) =>
+            {
+                var buffer = ByteConvertHelper.FormBytes<T>(data);
+                messageAction.Invoke(buffer);
+            };
+
+            InitProcessMessage(processKey, action, resetAction);
+            allMessageProxy[processKey].InitMessage();
+        }
+
+
         public static bool SendMessage(string processKey, string message)
         {
             InitProcessMessage(processKey);
@@ -68,6 +82,13 @@ namespace ColorsWin.Process
             InitProcessMessage(processKey);
             return allMessageProxy[processKey].SendData(data);
         }
+
+        public static bool SendData<T>(string processKey, T data)
+        {
+            var buffer = ByteConvertHelper.ToBytes(data);
+            return SendData(processKey, buffer);
+        }
+
 
         public static void CreateProcessKey(string processKey)
         {

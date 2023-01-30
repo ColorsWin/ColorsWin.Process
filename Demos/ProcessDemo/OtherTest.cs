@@ -12,6 +12,8 @@ namespace ProcessDemo
             //var data = ByteConvertHelper.StructToBytes(info);
             //var info2 = ByteConvertHelper.BytesToStruct<TestInfo>(data);
 
+            //ByteConverManager.Test();
+
             var intData = ByteConvertHelper.ToBytes(int.MaxValue);
 
             var intValue = ByteConvertHelper.FormBytes<int>(intData);

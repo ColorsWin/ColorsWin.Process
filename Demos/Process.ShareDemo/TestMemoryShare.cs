@@ -8,9 +8,22 @@ namespace Process.ShareTest
         public static void OutPut()
         {
             // HadRun("TestProcess_Key");
-            BaseTest.TestSend();
+            //BaseTest.TestSend();
             // BaseTest.TestBatchSend();
-        }        
+
+            TypeOutput();
+        }
+
+        public static void TypeOutput()
+        {
+            string processKey = "ProcessMessage_type";
+            ProcessMessageManager.AcceptData<int>(processKey, (a) =>
+            {
+
+            }, true);
+
+            ProcessMessageManager.SendData(processKey, 123);
+        }
 
         public static void BaseOutput()
         {
