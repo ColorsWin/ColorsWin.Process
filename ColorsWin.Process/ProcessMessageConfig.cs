@@ -36,5 +36,8 @@ namespace ColorsWin.Process
         public static Encoding Encoding { get; } = Encoding.Default;
 
         public static bool NamePieService { get; set; } = false;
+
+
+        public static bool UnknowTypeUseSerializable { get; set; } = false;
     }
 }

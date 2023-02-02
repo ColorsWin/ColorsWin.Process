@@ -84,6 +84,10 @@ namespace ColorsWin.Process
 
         public bool SendMessage(string message)
         {
+            if (message == null)
+            {
+                return false;
+            }
             var data = ProcessMessageConfig.Encoding.GetBytes(message);
             memoryFile.IsString = true;
             return SendData(data);
