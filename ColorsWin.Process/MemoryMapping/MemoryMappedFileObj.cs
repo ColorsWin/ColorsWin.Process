@@ -107,19 +107,16 @@ namespace ColorsWin.Process
 
         public virtual void WriteMessage(string message)
         {
-            var data = ProcessMessageConfig.Encoding.GetBytes(message);
-            IsString = true;
+            var data = ProcessMessageConfig.Encoding.GetBytes(message);           
             WriteData(data);
-            IsString = false;
+            
         }
 
         public virtual string ReadMessage()
         {
             var data = ReadData();
             return ProcessMessageConfig.Encoding.GetString(data);
-        }
-
-        internal bool IsString { get; set; } = false;
+        }     
 
         public abstract void WriteData(byte[] data);
 

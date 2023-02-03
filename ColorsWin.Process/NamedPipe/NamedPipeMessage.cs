@@ -13,7 +13,7 @@ namespace ColorsWin.Process.NamedPipe
         private static Dictionary<string, string> allProcessMessageCache = new Dictionary<string, string>();
         private NamedPipeClient client;
         private NamedPipeListenServer server;
-        public event Action<string> AcceptMessage;
+
         public event Action<byte[]> AcceptData;
 
         public NamedPipeMessage(string processName, bool read)
@@ -31,13 +31,7 @@ namespace ColorsWin.Process.NamedPipe
             }
         }
 
-        public void OnAcceptMessage(string message)
-        {
-            if (AcceptMessage != null)
-            {
-                AcceptMessage(message);
-            }
-        }
+
 
         public string ReadMessage()
         {
@@ -59,7 +53,7 @@ namespace ColorsWin.Process.NamedPipe
 
         public bool SendMessage(string message)
         {
-            allProcessMessageCache[processKey] = message;            
+            allProcessMessageCache[processKey] = message;
             return client.SendMessage(message);
         }
 
@@ -72,7 +66,7 @@ namespace ColorsWin.Process.NamedPipe
         {
             if (read)
             {
-                server = new NamedPipeListenServer(ProcessKeyTag + processKey, OnAcceptData, OnAcceptMessage);
+                server = new NamedPipeListenServer(ProcessKeyTag + processKey, OnAcceptData);
                 Task.Factory.StartNew(() =>
                 {
                     server.Run();

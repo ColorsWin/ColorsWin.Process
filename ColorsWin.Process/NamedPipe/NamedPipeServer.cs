@@ -12,14 +12,12 @@ namespace ColorsWin.Process.NamedPipe
         private List<NamedPipeServerStream> serverPool = new List<NamedPipeServerStream>();
         private string pipName = "ColorsWin.PipName";
         private Action<byte[]> actionData;
-        private Action<string> actionMessage;
-        public NamedPipeListenServer(string pipName, Action<byte[]> actionData, Action<string> actionMessage)
+      
+        public NamedPipeListenServer(string pipName, Action<byte[]> actionData )
         {
             this.pipName = pipName;
-            this.actionData = actionData;
-            this.actionMessage = actionMessage;
+            this.actionData = actionData;          
         }
-
 
         protected NamedPipeServerStream CreateNamedPipeServerStream()
         {
@@ -54,24 +52,11 @@ namespace ColorsWin.Process.NamedPipe
                 {
                     bool isRun = true;
                     while (isRun)
-                    {
-                        bool tempIsString;
-
-                        var data = StreamHelper.ReadData(pipeServer, out tempIsString);
-                        if (tempIsString)
+                    { 
+                        var data = StreamHelper.ReadData(pipeServer);
+                        if (actionData != null)
                         {
-                            if (actionMessage != null)
-                            {
-                                var message = System.Text.Encoding.UTF8.GetString(data);
-                                actionMessage(message);
-                            }
-                        }
-                        else
-                        {
-                            if (actionData != null)
-                            {
-                                actionData(data);
-                            }
+                            actionData(data);
                         }
 
                         if (NamedPipeMessage.Wait)

@@ -44,15 +44,15 @@ namespace Process.ShareTest
                 Console.WriteLine(processKey + "：AcceptMessage--------" + item);
             });
 
-            ProcessMessageManager.AcceptData(processKey, (item) =>
-            {
-                if (item == null)
-                {
-                    return;
-                }
-                var data = System.Text.Encoding.Default.GetString(item);
-                Console.WriteLine(processKey + "：AcceptData:--------" + data);
-            });
+            //ProcessMessageManager.AcceptData(processKey, (item) =>
+            //{
+            //    if (item == null)
+            //    {
+            //        return;
+            //    }
+            //    var data = System.Text.Encoding.Default.GetString(item);
+            //    Console.WriteLine(processKey + "：AcceptData:--------" + data);
+            //});
 
             string tempData = Console.ReadLine();
             while (tempData != "exit")

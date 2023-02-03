@@ -9,7 +9,6 @@ namespace ColorsWin.Process
         private IProcessMessage sendMessage;
         private string processKey;
         private ProcessMessageType processMessageType;
-        private Action<string> actionMessage;
         private Action<byte[]> actionData;
 
         public ProcessMessageProxy(string processKey)
@@ -38,31 +37,6 @@ namespace ColorsWin.Process
         {
             InitMessageType(true);
             return acceptMessage.ReadData();
-        }
-
-        public bool SendMessage(string message)
-        {
-            InitMessageType(false);
-            return sendMessage.SendMessage(message);
-        }
-
-        public string ReadMessage()
-        {
-            InitMessageType(true);
-            return acceptMessage.ReadMessage();
-        }
-
-        public void ChangeAction(Action<string> actionMessage, bool reset)
-        {
-            if (reset || this.actionMessage == null)
-            {
-                this.actionMessage = actionMessage;
-            }
-            else
-            {
-                this.actionMessage += actionMessage;
-            }
-            InitMessageType(true);
         }
 
 
@@ -111,19 +85,6 @@ namespace ColorsWin.Process
             }
         }
 
-        protected virtual void OnMessage(string message)
-        {
-            if (message == null)
-            {
-                return;
-            }
-            ProcessMessageManager.OnAcceptMessage(processKey, message);
-            if (actionMessage != null)
-            {
-                actionMessage(message);
-            }
-        }
-
         internal void InitMessageType(bool read)
         {
             switch (processMessageType)
@@ -154,9 +115,8 @@ namespace ColorsWin.Process
                 if (acceptMessage == null)
                 {
                     acceptMessage = new MemoryMessage(processKey, read);
-                    acceptMessage.AcceptMessage += OnMessage;
                     acceptMessage.AcceptData += (data) =>
-                    {
+                    {                       
                         if (actionData != null)
                         {
                             actionData(data);
@@ -181,7 +141,7 @@ namespace ColorsWin.Process
                 if (acceptMessage == null)
                 {
                     acceptMessage = new NamedPipeMessage(processKey, read);
-                    acceptMessage.AcceptMessage += OnMessage;
+
                     acceptMessage.AcceptData += (data) =>
                     {
                         if (actionData != null)
@@ -207,7 +167,7 @@ namespace ColorsWin.Process
                 if (acceptMessage == null)
                 {
                     acceptMessage = new FileMessage(processKey, read);
-                    acceptMessage.AcceptMessage += OnMessage;
+
                     acceptMessage.AcceptData += (data) =>
                     {
                         if (actionData != null)

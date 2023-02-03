@@ -23,7 +23,7 @@ namespace ColorsWin.Process.NamedPipe
             {
                 pipeClient.Connect(10000);
             }
-            StreamHelper.WriteData(pipeClient, message, false);
+            StreamHelper.WriteData(pipeClient, message);
             pipeClient.Flush();
 
             if (NamedPipeMessage.Wait)
@@ -44,7 +44,7 @@ namespace ColorsWin.Process.NamedPipe
             {
                 pipeClient.Connect(10 * 1000);
             }
-            StreamHelper.WriteData(pipeClient, data, true);
+            StreamHelper.WriteData(pipeClient, data);
             pipeClient.Flush();
             return true;
         }

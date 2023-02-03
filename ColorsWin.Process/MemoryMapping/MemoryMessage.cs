@@ -21,7 +21,6 @@ namespace ColorsWin.Process
 
         private string GetProcessKey(string appendTag = null)
         {
-            //bool isAdmmin = ProcessHelper.IsRunAsAdmin();
             var tag = ProcessMessageConfig.GlobalTag;
             return tag + processKey + appendTag;
         }
@@ -43,25 +42,13 @@ namespace ColorsWin.Process
             while (true)
             {
                 eventWait.WaitOne();
+
+                Console.WriteLine(Guid.NewGuid().ToString());
+
                 var data = ReadData();
-                if (memoryFile.IsString)
+                if (AcceptData != null)
                 {
-                    if (AcceptMessage != null)
-                    {
-                        string message = string.Empty;
-                        if (data != null)
-                        {
-                            message = ProcessMessageConfig.Encoding.GetString(data);
-                        }
-                        AcceptMessage(message);
-                    }
-                }
-                else
-                {
-                    if (AcceptData != null)
-                    {
-                        AcceptData(data);
-                    }
+                    AcceptData(data);
                 }
                 eventWait.Reset();
             }
@@ -69,34 +56,12 @@ namespace ColorsWin.Process
 
         #region IProcessMessage
 
-        public event Action<string> AcceptMessage;
+
         public event Action<byte[]> AcceptData;
-
-        public string ReadMessage()
-        {
-            var data = ReadData();
-            if (data == null)
-            {
-                return null;
-            }
-            return ProcessMessageConfig.Encoding.GetString(data);
-        }
-
-        public bool SendMessage(string message)
-        {
-            if (message == null)
-            {
-                return false;
-            }
-            var data = ProcessMessageConfig.Encoding.GetBytes(message);
-            memoryFile.IsString = true;
-            return SendData(data);
-        }
 
         public bool SendData(byte[] message)
         {
             memoryFile.WriteData(message);
-            memoryFile.IsString = false;
             if (eventWait != null)
             {
                 eventWait.Set();

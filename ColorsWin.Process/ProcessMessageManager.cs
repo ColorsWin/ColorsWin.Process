@@ -33,63 +33,6 @@ namespace ColorsWin.Process
             }
             return ProcessMessageType.None;
         }
-
-        public static void AcceptMessage(string processKey, Action<string> messageAction, bool resetAction = false)
-        {
-            InitProcessMessage(processKey, messageAction, resetAction);
-            allMessageProxy[processKey].InitMessage();
-        }
-
-        public static void AcceptData(string processKey, Action<byte[]> messageAction, bool resetAction = false)
-        {
-            InitProcessMessage(processKey, messageAction, resetAction);
-            allMessageProxy[processKey].InitMessage();
-        }
-
-        public static void AcceptData<T>(string processKey, Action<T> messageAction, bool resetAction = false)
-        {
-            Action<byte[]> action = (byte[] data) =>
-            {
-                var buffer = ByteConvertHelper.FormBytes<T>(data);
-                messageAction.Invoke(buffer);
-            };
-
-            InitProcessMessage(processKey, action, resetAction);
-            allMessageProxy[processKey].InitMessage();
-        }
-
-
-        public static bool SendMessage(string processKey, string message)
-        {
-            InitProcessMessage(processKey);
-            return allMessageProxy[processKey].SendMessage(message);
-        }
-
-        public static byte[] ReadData(string processKey)
-        {
-            InitProcessMessage(processKey);
-            return allMessageProxy[processKey].ReadData();
-        }
-
-        public static string ReadMessage(string processKey)
-        {
-            InitProcessMessage(processKey);
-            return allMessageProxy[processKey].ReadMessage();
-        }
-
-        public static bool SendData(string processKey, byte[] data)
-        {
-            InitProcessMessage(processKey);
-            return allMessageProxy[processKey].SendData(data);
-        }
-
-        public static bool SendData<T>(string processKey, T data)
-        {
-            var buffer = ByteConvertHelper.ToBytes(data);
-            return SendData(processKey, buffer);
-        }
-
-
         public static void CreateProcessKey(string processKey)
         {
             InitProcessMessage(processKey);
@@ -127,6 +70,70 @@ namespace ColorsWin.Process
             return allMessageProxy.ContainsKey(processKey);
         }
 
+
+        public static void AcceptMessage(string processKey, Action<string> messageAction, bool resetAction = false)
+        {
+            InitProcessMessage(processKey, messageAction, resetAction);
+            allMessageProxy[processKey].InitMessage();
+        }
+
+        public static bool SendMessage(string processKey, string message)
+        {
+            var data = ByteConvertHelper.ToBytes<string>(message);
+            return SendData(processKey, data);
+        }
+        public static string ReadMessage(string processKey)
+        {
+            var data = ReadData(processKey);
+            return ByteConvertHelper.FormBytes<string>(data);
+        }
+
+
+        public static byte[] ReadData(string processKey)
+        {
+            InitProcessMessage(processKey);
+            return allMessageProxy[processKey].ReadData();
+        }
+
+
+        public static void AcceptData(string processKey, Action<byte[]> messageAction, bool resetAction = false)
+        {
+            InitProcessData(processKey, messageAction, resetAction);
+            allMessageProxy[processKey].InitMessage();
+        }
+
+        public static bool SendData(string processKey, byte[] data)
+        {
+            InitProcessMessage(processKey);
+            return allMessageProxy[processKey].SendData(data);
+        }
+
+
+        public static void AcceptData<T>(string processKey, Action<T> messageAction, bool resetAction = false)
+        {
+            Action<byte[]> action = (data) =>
+            {
+                var buffer = ByteConvertHelper.FormBytes<T>(data);
+                messageAction.Invoke(buffer);
+            };
+
+            InitProcessData(processKey, action, resetAction);
+            allMessageProxy[processKey].InitMessage();
+        }
+
+        public static bool SendData<T>(string processKey, T data)
+        {
+            var buffer = ByteConvertHelper.ToBytes(data);
+            return SendData(processKey, buffer);
+        }
+
+        public static T ReadData<T>(string processKey)
+        {
+            var data = ReadData(processKey);
+            return ByteConvertHelper.FormBytes<T>(data);
+
+        }
+
         #region Private
 
         private static void InitProcessMessage(string processKey)
@@ -140,15 +147,21 @@ namespace ColorsWin.Process
 
         private static void InitProcessMessage(string processKey, Action<string> action, bool resetAction = false)
         {
-            InitProcessMessage(processKey);
-            allMessageProxy[processKey].ChangeAction(action, resetAction);
+            Action<byte[]> actionData = (data) =>
+            {
+                var buffer = ByteConvertHelper.FormBytes<string>(data);
+                //OnAcceptMessage(processKey, buffer);
+                action.Invoke(buffer);
+            };
+            InitProcessData(processKey, actionData, resetAction);
         }
 
-        private static void InitProcessMessage(string processKey, Action<byte[]> action, bool resetAction = false)
+        private static void InitProcessData(string processKey, Action<byte[]> action, bool resetAction = false)
         {
             InitProcessMessage(processKey);
             allMessageProxy[processKey].ChangeAction(action, resetAction);
         }
+
 
         internal static void OnAcceptMessage(string processKey, string message)
         {

@@ -8,10 +8,10 @@ namespace Process.ShareTest
         public static void OutPut()
         {
             // HadRun("TestProcess_Key");
-            //BaseTest.TestSend();
+            BaseTest.TestSend();
             // BaseTest.TestBatchSend();
 
-            TypeOutput();
+            //TypeOutput();
         }
 
         public static void TypeOutput()

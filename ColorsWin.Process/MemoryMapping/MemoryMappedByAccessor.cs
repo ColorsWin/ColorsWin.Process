@@ -14,9 +14,9 @@ namespace ColorsWin.Process
         public override void WriteData(byte[] data)
         {
             int position = 0;
-            byte flag = (byte)(IsString ? 1 : 0);
-            viewAccessor.Write(position, flag);
-            position += 1;
+            //byte flag = (byte)(IsString ? 1 : 0);
+            //viewAccessor.Write(position, flag);
+            //position += 1;
 
             viewAccessor.Write(position, data.Length);
             position += 4;
@@ -27,8 +27,8 @@ namespace ColorsWin.Process
         {
             int position = 0;
 
-            int flag = viewAccessor.ReadByte(position);
-            position += 1;
+            //int flag = viewAccessor.ReadByte(position);
+            //position += 1;
 
             int dataLength = viewAccessor.ReadInt32(position);
             if (dataLength == 0)
@@ -40,7 +40,5 @@ namespace ColorsWin.Process
             viewAccessor.ReadArray<byte>(position, data, 0, data.Length);
             return data;
         }
-
-
     }
 }

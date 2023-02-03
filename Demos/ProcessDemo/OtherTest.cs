@@ -8,7 +8,10 @@ namespace ProcessDemo
     public class OtherTest
     {
         public static void Output()
-        { 
+        {
+            string typeName = "11".PadLeft(255,'大');
+            var typeData = System.Text.Encoding.Default.GetBytes(typeName);
+
             //var info = new TestInfo { Id = 20, Name = "David" };  
             //var data = ByteConvertHelper.StructToBytes(info);
             //var info2 = ByteConvertHelper.BytesToStruct<TestInfo>(data);

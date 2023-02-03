@@ -49,56 +49,35 @@ namespace ColorsWin.Process
         }
 
         private void OnDataChange(object sender, FileSystemEventArgs e)
-        {
-            bool isString;
-            var data = GetData(out isString);
+        { 
+            var data = GetData();
             if (data == null)
             {
                 return;
             }
-
-            if (isString)
+            if (AcceptData != null)
             {
-                if (AcceptMessage != null)
-                {
-                    string temp = ProcessMessageConfig.Encoding.GetString(data);
-                    AcceptMessage(temp);
-                }
-            }
-            else
-            {
-                if (AcceptData != null)
-                {
-                    AcceptData(data);
-                }
+                AcceptData(data);
             }
         }
 
 
         private byte[] GetData()
         {
-            bool isString;
-            var data = GetData(out isString);
-            return data;
-        }
-
-        private byte[] GetData(out bool isString)
-        {
             string fullPath = Path.Combine(tempDataFolederPath, GetFileName());
             if (!File.Exists(fullPath))
             {
-                isString = false;
                 return null;
             }
 
             using (var fs = new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                var data = StreamHelper.ReadData(fs, out isString);
+                var data = StreamHelper.ReadData(fs);
                 return data;
             }
         }
 
-        private bool SetData(byte[] data, bool isString = false)
+        private bool SetData(byte[] data)
         {
             Thread.Sleep(ProcessMessageConfig.BatchSendWaitTime);
 
@@ -106,7 +85,7 @@ namespace ColorsWin.Process
             using (var fs = new FileStream(fullPath, FileMode.OpenOrCreate, FileAccess.Write))
             {
                 fs.Position = 0;
-                StreamHelper.WriteData(fs, data, isString);
+                StreamHelper.WriteData(fs, data);
                 return true;
             }
         }
@@ -140,7 +119,7 @@ namespace ColorsWin.Process
         public bool SendMessage(string message)
         {
             var data = ProcessMessageConfig.Encoding.GetBytes(message);
-            return SetData(data, true);
+            return SetData(data);
         }
 
         #endregion
