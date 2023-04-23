@@ -4,7 +4,7 @@ namespace Process.ShareTest
 {
     class ManagerTest
     {
-        public static void Output()
+        public static void Output(ProcessMessageType processMessageType = ProcessMessageType.None)
         {
             bool isAdmmin = ProcessHelper.IsRunAsAdmin();
             if (isAdmmin)
@@ -12,9 +12,25 @@ namespace Process.ShareTest
                 System.Console.WriteLine("Admin");
             }
 
-            //TestFile.OutPut();
-            TestMemoryShare.OutPut();
-            //TestNamedPipe.OutPut();
+            switch (processMessageType)
+            {
+                case ProcessMessageType.None:
+                    BaseTest.TypeOutput();
+                    break;
+                case ProcessMessageType.ShareMemory:
+                    TestMemoryShare.OutPut();
+                    break;
+                case ProcessMessageType.NamedPipe:
+                    TestNamedPipe.OutPut();
+                    break;
+                case ProcessMessageType.File:
+                    TestFile.OutPut();
+                    break;
+                default:
+                    break;
+            }
+
+
 
             //Run ProcessServiceDemo Test RunService
             //TestWinService.RunClient();

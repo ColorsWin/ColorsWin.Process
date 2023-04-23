@@ -31,12 +31,12 @@ namespace ColorsWin.Process
         /// </summary>
         public static string FileMessageCachePath { get; set; }
 
+
+        public static bool EnableLog { get; set; } = true;
+
         public static ILog Log { get; set; }
 
         public static Encoding Encoding { get; } = Encoding.Default;
-
-        public static bool NamePieService { get; set; } = false;
-
 
         public static bool UnknowTypeUseSerializable { get; set; } = false;
     }

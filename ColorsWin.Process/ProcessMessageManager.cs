@@ -33,6 +33,7 @@ namespace ColorsWin.Process
             }
             return ProcessMessageType.None;
         }
+
         public static void CreateProcessKey(string processKey)
         {
             InitProcessMessage(processKey);
@@ -70,7 +71,6 @@ namespace ColorsWin.Process
             return allMessageProxy.ContainsKey(processKey);
         }
 
-
         public static void AcceptMessage(string processKey, Action<string> messageAction, bool resetAction = false)
         {
             InitProcessMessage(processKey, messageAction, resetAction);
@@ -82,19 +82,18 @@ namespace ColorsWin.Process
             var data = ByteConvertHelper.ToBytes<string>(message);
             return SendData(processKey, data);
         }
+
         public static string ReadMessage(string processKey)
         {
             var data = ReadData(processKey);
             return ByteConvertHelper.FormBytes<string>(data);
         }
 
-
         public static byte[] ReadData(string processKey)
         {
             InitProcessMessage(processKey);
             return allMessageProxy[processKey].ReadData();
         }
-
 
         public static void AcceptData(string processKey, Action<byte[]> messageAction, bool resetAction = false)
         {
@@ -113,8 +112,16 @@ namespace ColorsWin.Process
         {
             Action<byte[]> action = (data) =>
             {
-                var buffer = ByteConvertHelper.FormBytes<T>(data);
-                messageAction.Invoke(buffer);
+                try
+                {
+                    var buffer = ByteConvertHelper.FormBytes<T>(data);
+                    messageAction.Invoke(buffer);
+                }
+                catch (Exception ex)
+                {
+                    LogHelper.WriteException(ex, "ToByte Convert Error");
+                    throw ex;
+                }
             };
 
             InitProcessData(processKey, action, resetAction);
@@ -131,7 +138,6 @@ namespace ColorsWin.Process
         {
             var data = ReadData(processKey);
             return ByteConvertHelper.FormBytes<T>(data);
-
         }
 
         #region Private

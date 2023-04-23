@@ -27,7 +27,7 @@ namespace ColorsWin.Process.Log
 
         public void Trace(string message)
         {
-            throw new NotImplementedException();
+            System.Diagnostics.Trace.WriteLine(message);
         }
 
         public void Warn(string message)

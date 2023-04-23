@@ -8,7 +8,7 @@ namespace Process.ShareTest
         public static void TestSend()
         {
             var processKey = "processKey_" + ProcessMessageConfig.ProcessMessageType;
-            bool isRun = ProcessHelper.HadRun(processKey);          
+            bool isRun = ProcessHelper.HadRun(processKey);
             if (isRun)
             {
                 StartSend(processKey);
@@ -97,5 +97,26 @@ namespace Process.ShareTest
             Console.Title = i.ToString();
             i++;
         }
+
+
+        #region TypeOutput
+
+        public static void TypeOutput()
+        {
+            string processKey = "ProcessMessage_type";
+
+            ProcessMessageManager.AcceptData<int>(processKey, (message) =>
+            {
+                Console.WriteLine(processKey + "  Accept Message--------" + message.ToString());
+            }, true);
+
+            ProcessMessageManager.SendData(processKey, 123);
+
+           // ProcessMessageManager.SendData(processKey, 123L);// Error type not match
+
+
+        }
+
+        #endregion
     }
 }

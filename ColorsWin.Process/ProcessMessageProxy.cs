@@ -27,6 +27,7 @@ namespace ColorsWin.Process
         {
             return processMessageType;
         }
+
         public bool SendData(byte[] data)
         {
             InitMessageType(false);
@@ -103,10 +104,8 @@ namespace ColorsWin.Process
 
                 default:
                     throw new NotImplementedException();
-
             }
         }
-
 
         private void CreateShareMemoryMessage(bool read)
         {
