@@ -39,7 +39,7 @@ namespace ColorsWin.Process.Helpers
 
                 if (wasCreated)
                 {
-                    LogHelper.Debug("Created the named event." + eventName);
+                    //LogHelper.Debug("Created the named event." + eventName);
                 }
             }
             else if (unauthorized)

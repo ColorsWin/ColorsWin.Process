@@ -1,4 +1,19 @@
 # ColorsWin.Process
+-----------------------------------
+
+### ProcessMessageType
+
+|Type       |Complete          |Remark          |
+| -------------|:--------------:|:--------------:|
+|ShareMemory|√| default ProcessMessageType |
+|NamedPipe|√|Many Send , One Accept|
+|Message|√|need IntPtr|
+|File|√|Many Send , Many Accept|
+|MQ|X|Dependent on third-party ,so will not be realized||
+
+
+-----------------------------------
+
 
 #### The sendMessage process
 
@@ -42,10 +57,11 @@ namespace ColorsWin.Process.Test
 }
 ```
 
+
 -----------------------------------
 
 
-#### The sendMessage process by File
+##  V2.0  Supports generics      
 
 ```C++
 using System;
@@ -56,100 +72,73 @@ namespace ColorsWin.Process.Test
     {
         static void Main(string[] args)
         {
-            ProcessMessageConfig.ProcessMessageType = ProcessMessageType.File;
-            string processKey = "ProcessMessage_Key";
-            ProcessMessageManager.SendMessage(processKey, " Hello App1");
+          TypeOutput();
             Console.Read();
         }
-    }
-}
 
-```
-
-#### The acceptMessage process by File
-
-```C++
-using System;
-
-namespace ColorsWin.Process.Test
-{
-    class Program
-    {
-        static void Main(string[] args)
+      public static void TypeOutput()
         {
-		    ProcessMessageConfig.ProcessMessageType = ProcessMessageType.File;
-            string processKey = "ProcessMessage_Key";
-            ProcessMessageManager.AcceptMessage(processKey, item =>
+            string processKey = "ProcessMessage_type";
+
+            ProcessMessageManager.AcceptData<int>(processKey, (message) =>
             {
-                Console.WriteLine(processKey + "-----Message:" + item);
-            });
-            Console.Read();
+                Console.WriteLine(processKey + "  Accept Message--------" + message.ToString());
+            }, true);
+
+            ProcessMessageManager.SendData(processKey, 123);
+
+            // ProcessMessageManager.SendData(processKey, 123L);// Error type not match
+
+
+            string structKey = "ProcessMessage_struct";
+            ProcessMessageManager.AcceptData<Student>(structKey, (message) =>
+            {
+                Console.WriteLine(processKey + "  Accept Message--------" + message.Name);
+            }, true);
+
+            ProcessMessageManager.SendData(structKey, new Student { Name = "Test" });
+
+
+           //Test owner Serialize
+		   
+            ByteConverManager.AddToByte(typeof(Class), ClassToByte);
+            ByteConverManager.AddFormByte(typeof(Class), ClassFromByte);
+
+            string classKey = "ProcessMessage_class";
+            ProcessMessageManager.AcceptData<Class>(classKey, (message) =>
+            {
+                Console.WriteLine(processKey + "  Accept Message--------" + message.Name);
+            }, true);
+
+            ProcessMessageManager.SendData(classKey, new Class { Name = "Test" });
         }
-    }
-}
-```
 
------------------------------------
-
-
-#### The sendData process
-
-```C++
-using System;
-
-namespace ColorsWin.Process.Test
-{
-    class Program
-    {
-        static void Main(string[] args)
+        private static byte[] ClassToByte(object data)
         {
-            byte[] data = System.Text.Encoding.Default.GetBytes(" Hello App1");
-            string processKey = "ProcessMessage_Key";
-            ProcessMessageManager.SendData(processKey, data);
-            Console.Read();
+            //Customize converting objects to byte arrays
+            return ObjectSerializeHelper.Serialize(data);
         }
-    }
-}
 
-```
-
-#### The acceptData process
-
-```C++
-using System;
-
-namespace ColorsWin.Process.Test
-{
-    class Program
-    {
-        static void Main(string[] args)
+        private static Class ClassFromByte(byte[] data)
         {
-            string processKey = "ProcessMessage_Key";
-            ProcessMessageManager.AcceptData(processKey, data =>
-            {               
-                var message = System.Text.Encoding.Default.GetString(data);
-                Console.WriteLine(message);
-            });
-            Console.Read();
+            return (Class)ObjectSerializeHelper.Deserialize(data);
         }
     }
 }
 ```
 
------------------------------------
 
-#### ProcessMessageType:
-|Type       |Complete          |Remark          |
-| -------------|:--------------:|:--------------:|
-|ShareMemory|√| default ProcessMessageType |
-|NamedPipe|√|Many Send , One Accept|
-|Message|√|need IntPtr|
-|File|√|Many Send , Many Accept|
-|MQ|X|Dependent on third-party ,so will not be realized||
+
+
+
+
+
 
 
 
 
  
+
+
 
 

@@ -1,4 +1,5 @@
 ﻿using ColorsWin.Process;
+using ColorsWin.Process.Helpers;
 using System;
 
 namespace Process.ShareTest
@@ -112,11 +113,57 @@ namespace Process.ShareTest
 
             ProcessMessageManager.SendData(processKey, 123);
 
-           // ProcessMessageManager.SendData(processKey, 123L);// Error type not match
+            // ProcessMessageManager.SendData(processKey, 123L);// Error type not match
 
 
+            string structKey = "ProcessMessage_struct";
+            ProcessMessageManager.AcceptData<Student>(structKey, (message) =>
+            {
+                Console.WriteLine(processKey + "  Accept Message--------" + message.Name);
+            }, true);
+
+            ProcessMessageManager.SendData(structKey, new Student { Name = "Test" });
+
+
+
+            ByteConverManager.AddToByte(typeof(Class), ClassToByte);
+            ByteConverManager.AddFormByte(typeof(Class), ClassFromByte);
+
+            string classKey = "ProcessMessage_class";
+            ProcessMessageManager.AcceptData<Class>(classKey, (message) =>
+            {
+                Console.WriteLine(processKey + "  Accept Message--------" + message.Name);
+            }, true);
+
+            ProcessMessageManager.SendData(classKey, new Class { Name = "Test" });
+        }
+
+        private static byte[] ClassToByte(object data)
+        {
+            //Customize converting objects to byte arrays
+            return ObjectSerializeHelper.Serialize(data);
+        }
+
+        private static Class ClassFromByte(byte[] data)
+        {
+            return (Class)ObjectSerializeHelper.Deserialize(data);
         }
 
         #endregion
+    }
+
+
+    public struct Student
+    {
+        public int ID { get; set; }
+
+        public string Name { get; set; }
+    }
+    [Serializable]
+    public class Class
+    {
+        public int ID { get; set; }
+
+        public string Name { get; set; }
     }
 }

@@ -182,15 +182,19 @@ namespace ColorsWin.Process.Helpers
         #endregion
     }
 
-
     public class ByteConverManager
     {
+        private static Dictionary<Type, Func<object, byte[]>> customToByteDictionary;
+        private static Dictionary<Type, Func<byte[], object>> customFromByteDictionary;
+
         private static Dictionary<Type, MethodInfo> toByteDictionary = new Dictionary<Type, MethodInfo>();
         private static Dictionary<Type, MethodInfo> fromByteDictionary = new Dictionary<Type, MethodInfo>();
         static ByteConverManager()
         {
             var type = typeof(DefaultByteConverHelper);
             InitType(type);
+            customToByteDictionary = new Dictionary<Type, Func<object, byte[]>>();
+            customFromByteDictionary = new Dictionary<Type, Func<byte[], object>>();
         }
 
         public static void ScanTypeConver(Type type)
@@ -223,6 +227,11 @@ namespace ColorsWin.Process.Helpers
         internal static byte[] ToBytes<T>(T obj)
         {
             var type = typeof(T);
+            if (customToByteDictionary.ContainsKey(type))
+            {
+                return customToByteDictionary[type].Invoke(obj);
+            }
+
             if (toByteDictionary.ContainsKey(type))
             {
                 var data = toByteDictionary[type].Invoke(null, new object[] { obj });
@@ -253,7 +262,7 @@ namespace ColorsWin.Process.Helpers
                 }
                 else
                 {
-                    throw new Exception("Type not realization");
+                    throw new Exception(typeof(T).FullName + "  not realization");
                 }
             }
         }
@@ -267,11 +276,14 @@ namespace ColorsWin.Process.Helpers
 
         internal static object FormBytes(Type type, byte[] bytes)
         {
+            if (customFromByteDictionary.ContainsKey(type))
+            {
+                return customFromByteDictionary[type].Invoke(bytes);
+            }
 
             if (fromByteDictionary.ContainsKey(type))
             {
                 var data = fromByteDictionary[type].Invoke(null, new object[] { bytes });
-
                 return data;
             }
             else
@@ -303,24 +315,26 @@ namespace ColorsWin.Process.Helpers
         }
 
 
-        public static bool AddToByte(Type type, MethodInfo method)
+        public static bool AddToByte(Type type, Func<object, byte[]> method)
         {
             if (method == null)
             {
                 return false;
             }
-            toByteDictionary[type] = method;
+            customToByteDictionary[type] = method;
             return true;
         }
 
-        public static bool AddFormByte(Type type, MethodInfo method)
+        public static bool AddFormByte(Type type, Func<byte[], object> method)
         {
             if (method == null)
             {
                 return false;
             }
-            fromByteDictionary[type] = method;
+            customFromByteDictionary[type] = method;
             return true;
         }
+
+
     }
 }
