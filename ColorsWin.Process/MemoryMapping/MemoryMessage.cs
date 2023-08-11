@@ -42,9 +42,6 @@ namespace ColorsWin.Process
             while (true)
             {
                 eventWait.WaitOne();
-
-                Console.WriteLine(Guid.NewGuid().ToString());
-
                 var data = ReadData();
                 if (AcceptData != null)
                 {
@@ -55,7 +52,6 @@ namespace ColorsWin.Process
         }
 
         #region IProcessMessage
-
 
         public event Action<byte[]> AcceptData;
 

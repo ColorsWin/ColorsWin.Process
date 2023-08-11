@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ColorsWin.Process.NamedPipe
 {
@@ -12,16 +12,13 @@ namespace ColorsWin.Process.NamedPipe
         private const string ProcessKeyTag = "_NamedPipe_ColorsWin";
         private static Dictionary<string, string> allProcessMessageCache = new Dictionary<string, string>();
         private NamedPipeClient client;
-        private NamedPipeListenServer server;
-
-        public event Action<byte[]> AcceptData;
+        private NamedPipeListenServer server; 
 
         public NamedPipeMessage(string processName, bool read)
         {
             this.processKey = processName;
             Init(read);
         }
-
 
         public void OnAcceptData(byte[] data)
         {
@@ -30,8 +27,6 @@ namespace ColorsWin.Process.NamedPipe
                 AcceptData(data);
             }
         }
-
-
 
         public string ReadMessage()
         {
@@ -43,24 +38,14 @@ namespace ColorsWin.Process.NamedPipe
             //To Do: get message from other Process
 
             return null;
-        }
-
-        public byte[] ReadData()
-        {
-            return null;
-        }
-
+        } 
+      
 
         public bool SendMessage(string message)
         {
             allProcessMessageCache[processKey] = message;
             return client.SendMessage(message);
-        }
-
-        public bool SendData(byte[] message)
-        {
-            return client.SendData(message);
-        }
+        }      
 
         public void Init(bool read)
         {
@@ -77,5 +62,21 @@ namespace ColorsWin.Process.NamedPipe
                 client = new NamedPipeClient(".", ProcessKeyTag + processKey);
             }
         }
+
+        #region IProcessMessage 
+
+        public event Action<byte[]> AcceptData;
+
+        public byte[] ReadData()
+        {
+            return  null;
+        }
+
+        public bool SendData(byte[] data)
+        {
+            return client.SendData(data);
+        }
+
+        #endregion
     }
 }

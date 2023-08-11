@@ -49,7 +49,7 @@ namespace ColorsWin.Process
         }
 
         private void OnDataChange(object sender, FileSystemEventArgs e)
-        { 
+        {
             var data = GetData();
             if (data == null)
             {
@@ -90,9 +90,8 @@ namespace ColorsWin.Process
             }
         }
 
-        #region IProcessMessage
+        #region IProcessMessage 
 
-        public event Action<string> AcceptMessage;
         public event Action<byte[]> AcceptData;
 
         public byte[] ReadData()
@@ -100,25 +99,8 @@ namespace ColorsWin.Process
             return GetData();
         }
 
-        public string ReadMessage()
-        {
-            var data = ReadData();
-            if (data == null)
-            {
-                return null;
-            }
-            return ProcessMessageConfig.Encoding.GetString(data);
-        }
-
-
         public bool SendData(byte[] data)
         {
-            return SetData(data);
-        }
-
-        public bool SendMessage(string message)
-        {
-            var data = ProcessMessageConfig.Encoding.GetBytes(message);
             return SetData(data);
         }
 
