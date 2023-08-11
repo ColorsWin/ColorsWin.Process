@@ -2,8 +2,8 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net40;netstandard2.0</TargetFrameworks>
-		<AssemblyVersion>1.0.10.0</AssemblyVersion>
-		<Version>1.0.10</Version>
+		<AssemblyVersion>2.0.1.0</AssemblyVersion>
+		<Version>2.0.1</Version>
 		<PackageIconUrl>https://multicolorwin.oss-cn-beijing.aliyuncs.com/image/256.png</PackageIconUrl>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Description>
@@ -13,13 +13,13 @@
 		<PackageTags>Process,ProcessCommunication,Messages</PackageTags>
 		<PackageProjectUrl>https://github.com/ColorsWin/ColorsWin.Process</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ColorsWin/ColorsWin.Process</RepositoryUrl>
-		<Copyright>Copyright 2022</Copyright>
+		<Copyright>Copyright 2023</Copyright>
 		<PackageReleaseNotes>
 			Communication between processes, through memory sharing, named pipes, files, sending messages
 			also includes  some process class help
 		</PackageReleaseNotes>
 		<RepositoryType>MIT</RepositoryType>
-		<FileVersion>1.0.10.0</FileVersion>
+		<FileVersion>1.0.1.0</FileVersion>
 		<Authors>ColorsWin</Authors>
 	</PropertyGroup>
 
