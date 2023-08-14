@@ -2,8 +2,8 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net40;netstandard2.0</TargetFrameworks>
-		<AssemblyVersion>2.0.1.0</AssemblyVersion>
-		<Version>2.0.1</Version>
+		<AssemblyVersion>2.0.0.0</AssemblyVersion>
+		<Version>2.0.0</Version>
 		<PackageIconUrl>https://multicolorwin.oss-cn-beijing.aliyuncs.com/image/256.png</PackageIconUrl>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Description>
@@ -19,7 +19,7 @@
 			also includes  some process class help
 		</PackageReleaseNotes>
 		<RepositoryType>MIT</RepositoryType>
-		<FileVersion>1.0.1.0</FileVersion>
+		<FileVersion>2.0.0.0</FileVersion>
 		<Authors>ColorsWin</Authors>
 	</PropertyGroup>
 
