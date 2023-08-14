@@ -72,7 +72,7 @@ namespace ColorsWin.Process.Test
     {
         static void Main(string[] args)
         {
-          TypeOutput();
+            TypeOutput();
             Console.Read();
         }
 
@@ -123,6 +123,20 @@ namespace ColorsWin.Process.Test
         {
             return (Class)ObjectSerializeHelper.Deserialize(data);
         }
+    }
+
+    public struct Student
+    {
+        public int ID { get; set; }
+
+        public string Name { get; set; }
+    }
+    [Serializable]
+    public class Class
+    {
+        public int ID { get; set; }
+
+        public string Name { get; set; }
     }
 }
 ```

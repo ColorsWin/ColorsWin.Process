@@ -75,14 +75,12 @@ namespace ColorsWin.Process.Helpers
 
             security.RemoveAccessRule(rule);
 
-
             rule = new EventWaitHandleAccessRule(user, EventWaitHandleRights.Synchronize | EventWaitHandleRights.Modify, AccessControlType.Allow);
             security.AddAccessRule(rule);
 
             handle.SetAccessControl(security);
 #endif
         }
-
 
         private static void SetAccessControl(EventWaitHandle handle)
         {

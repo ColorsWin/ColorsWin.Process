@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -180,66 +178,69 @@ namespace ColorsWin.Process.Helpers
             return Encoding.UTF8.GetString(bytes);
         }
         #endregion
-    }
 
-    public class ByteConverManager
-    {
-        private static Dictionary<Type, Func<object, byte[]>> customToByteDictionary;
-        private static Dictionary<Type, Func<byte[], object>> customFromByteDictionary;
 
-        private static Dictionary<Type, MethodInfo> toByteDictionary = new Dictionary<Type, MethodInfo>();
-        private static Dictionary<Type, MethodInfo> fromByteDictionary = new Dictionary<Type, MethodInfo>();
-        static ByteConverManager()
+        public static byte[] ToBytes<T>(T obj)
         {
-            var type = typeof(DefaultByteConverHelper);
-            InitType(type);
-            customToByteDictionary = new Dictionary<Type, Func<object, byte[]>>();
-            customFromByteDictionary = new Dictionary<Type, Func<byte[], object>>();
-        }
-
-        public static void ScanTypeConver(Type type)
-        {
-            InitType(type);
-        }
-
-        private static void InitType(Type type)
-        {
-            var methord = type.GetMethods(BindingFlags.Public | BindingFlags.Static);
-            foreach (var item in methord)
-            {
-                var info = item.GetCustomAttributes(false);
-                if (info.Length > 0)
-                {
-                    var customAttribute = info[0];
-                    if (customAttribute is TypeToByteAttribute typeTo)
-                    {
-                        toByteDictionary.Add(typeTo.Type1, item);
-                    }
-                    else if (customAttribute is TypeFromByteAttribute typeFrom)
-                    {
-                        fromByteDictionary.Add(typeFrom.Type1, item);
-                    }
-                }
-            }
-        }
-
-
-        internal static byte[] ToBytes<T>(T obj)
-        {
+            byte[] data = null;
             var type = typeof(T);
-            if (customToByteDictionary.ContainsKey(type))
+            if (type.IsValueType)
             {
-                return customToByteDictionary[type].Invoke(obj);
-            }
+                if (type == typeof(bool))
+                {
+                    data = BitConverter.GetBytes(Convert.ToBoolean(obj));
+                }
+                else if (type == typeof(char))
+                {
+                    data = BitConverter.GetBytes(Convert.ToChar(obj));
+                }
+                else if (type == typeof(short))
+                {
+                    data = BitConverter.GetBytes(Convert.ToInt16(obj));
+                }
+                else if (type == typeof(int))
+                {
+                    data = BitConverter.GetBytes(Convert.ToInt32(obj));
+                }
+                else if (type == typeof(long))
+                {
+                    data = BitConverter.GetBytes(Convert.ToInt64(obj));
+                }
+                else if (type == typeof(ushort))
+                {
+                    data = BitConverter.GetBytes(Convert.ToUInt16(obj));
+                }
+                else if (type == typeof(uint))
+                {
+                    data = BitConverter.GetBytes(Convert.ToUInt32(obj));
+                }
+                else if (type == typeof(ulong))
+                {
+                    data = BitConverter.GetBytes(Convert.ToUInt64(obj));
+                }
+                else if (type == typeof(float))
+                {
+                    data = BitConverter.GetBytes(Convert.ToSingle(obj));
+                }
+                else if (type == typeof(double))
+                {
+                    data = BitConverter.GetBytes(Convert.ToDouble(obj));
+                }
+                else if (type == typeof(byte))
+                {
+                    data = BitConverter.GetBytes(Convert.ToByte(obj));
+                }
+                else if (type == typeof(sbyte))
+                {
+                    data = BitConverter.GetBytes(Convert.ToSByte(obj));
+                }
 
-            if (toByteDictionary.ContainsKey(type))
-            {
-                var data = toByteDictionary[type].Invoke(null, new object[] { obj });
-                return data as byte[];
-            }
-            else
-            {
-                if (type.IsValueType && !type.IsPrimitive)
+                else if (type == typeof(DateTime))
+                {
+                    var longDate = Convert.ToDateTime(obj);
+                    data = BitConverter.GetBytes(longDate.Ticks);
+                }
+                else if (!type.IsPrimitive)
                 {
                     int size = Marshal.SizeOf(obj);
                     IntPtr buffer = Marshal.AllocHGlobal(size);
@@ -255,86 +256,107 @@ namespace ColorsWin.Process.Helpers
                         Marshal.FreeHGlobal(buffer);
                     }
                 }
-
-                if (ProcessMessageConfig.UnknowTypeUseSerializable)
-                {
-                    return ObjectSerializeHelper.Serialize(obj);
-                }
-                else
-                {
-                    throw new Exception(typeof(T).FullName + "  not realization");
-                }
             }
-        }
-
-        internal static T FormBytes<T>(byte[] bytes)
-        {
-            var type = typeof(T);
-            var data = FormBytes(type, bytes);
-            return (T)data;
-        }
-
-        internal static object FormBytes(Type type, byte[] bytes)
-        {
-            if (customFromByteDictionary.ContainsKey(type))
+            else if (type == typeof(string))
             {
-                return customFromByteDictionary[type].Invoke(bytes);
-            }
-
-            if (fromByteDictionary.ContainsKey(type))
-            {
-                var data = fromByteDictionary[type].Invoke(null, new object[] { bytes });
-                return data;
+                data = Encoding.UTF8.GetBytes(obj.ToString());
             }
             else
             {
-                if (type.IsValueType && !type.IsPrimitive)
+                data = ObjectSerializeHelper.Serialize(obj);
+            }
+            return data;
+        }
+
+        public static T FormBytes<T>(byte[] bytes)
+        {
+            object data = null;
+            var type = typeof(T);
+            if (type.IsValueType)
+            {
+                if (type == typeof(bool))
+                {
+                    data = BitConverter.ToBoolean(bytes, 0);
+                }
+                else if (type == typeof(char))
+                {
+                    data = BitConverter.ToChar(bytes, 0);
+                }
+                else if (type == typeof(short))
+                {
+                    data = BitConverter.ToInt16(bytes, 0);
+                }
+                else if (type == typeof(int))
+                {
+                    data = BitConverter.ToInt32(bytes, 0);
+                }
+                else if (type == typeof(long))
+                {
+                    data = BitConverter.ToInt64(bytes, 0);
+                }
+                else if (type == typeof(ushort))
+                {
+                    data = BitConverter.ToUInt16(bytes, 0);
+                }
+                else if (type == typeof(uint))
+                {
+                    data = BitConverter.ToUInt32(bytes, 0);
+                }
+                else if (type == typeof(ulong))
+                {
+                    data = BitConverter.ToUInt64(bytes, 0);
+                }
+                else if (type == typeof(float))
+                {
+                    data = BitConverter.ToSingle(bytes, 0);
+                }
+                else if (type == typeof(double))
+                {
+                    data = BitConverter.ToDouble(bytes, 0);
+                }
+                else if (type == typeof(byte))
+                {
+                    data = BitConverter.ToInt16(bytes, 0);
+                }
+                else if (type == typeof(sbyte))
+                {
+                    data = BitConverter.ToInt16(bytes, 0);
+                }
+
+                else if (type == typeof(DateTime))
+                {
+                    var longDate = BitConverter.ToInt64(bytes, 0);
+
+                    data = new DateTime(longDate);
+                }
+                else if (!type.IsPrimitive)
                 {
                     int size = Marshal.SizeOf(type);
                     IntPtr buffer = Marshal.AllocHGlobal(size);
                     try
                     {
                         Marshal.Copy(bytes, 0, buffer, size);
-                        return Marshal.PtrToStructure(buffer, type);
+                        return (T)Marshal.PtrToStructure(buffer, type);
                     }
                     finally
                     {
                         Marshal.FreeHGlobal(buffer);
                     }
                 }
-
-                if (ProcessMessageConfig.UnknowTypeUseSerializable)
-                {
-                    return ObjectSerializeHelper.Deserialize(bytes);
-                }
-                else
-                {
-                    throw new Exception("Type not realization");
-                }
             }
-        }
-
-
-        public static bool AddToByte(Type type, Func<object, byte[]> method)
-        {
-            if (method == null)
+            else if (type == typeof(string))
             {
-                return false;
+                data = Encoding.UTF8.GetString(bytes);
             }
-            customToByteDictionary[type] = method;
-            return true;
-        }
-
-        public static bool AddFormByte(Type type, Func<byte[], object> method)
-        {
-            if (method == null)
+            else
             {
-                return false;
+                data = ObjectSerializeHelper.Deserialize(bytes);
             }
-            customFromByteDictionary[type] = method;
-            return true;
+            if (data == null)
+            {
+                return default(T);
+            }
+            return (T)data;
         }
-
-
     }
 }

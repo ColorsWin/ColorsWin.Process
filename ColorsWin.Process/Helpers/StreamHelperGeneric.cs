@@ -10,9 +10,9 @@ namespace ColorsWin.Process.Helpers
         public static void WriteData(Stream stream, byte[] data, string typeName)
         {
             // 1、typeName length （1 byte）
-            // 2、dataLength (4 byte)
-            // 3、typeName data
-            // 4 、data Content 
+            // 2、content length (4 byte)
+            // 3、data typeName 
+            // 4、data Content 
 
             var typeData = ProcessMessageConfig.Encoding.GetBytes(typeName);
 

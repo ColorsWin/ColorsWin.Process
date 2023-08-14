@@ -1,5 +1,4 @@
-﻿using ColorsWin.Process;
-using Process.ShareTest;
+﻿using Process.ShareTest;
 using System;
 
 namespace ProcessDemo

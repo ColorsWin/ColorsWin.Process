@@ -1,5 +1,6 @@
 ﻿using ColorsWin.Process;
 using ColorsWin.Process.Helpers;
+using ColorsWin.Process.Manager;
 using System;
 
 namespace Process.ShareTest
