@@ -1,6 +1,7 @@
 ﻿using ColorsWin.Process.Helpers;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace ColorsWin.Process
@@ -197,6 +198,32 @@ namespace ColorsWin.Process
         public static bool SendMessage(string message)
         {
             return SendMessage(defaultProcessKey, message);
+        }
+
+        #endregion
+
+
+        #region Obsolete Methord 
+
+        [Obsolete("Use ProcessMessageConfig.ProcessMessageType", true), EditorBrowsable(EditorBrowsableState.Never)]
+        public static void Init(ProcessMessageType processType)
+        {
+            //foreach (var item in allMessageProxy)
+            //{
+            //    item.Value.Reset(processType);
+            //}
+        }
+
+        [Obsolete("This method is obsolete, please use AcceptMessage"), EditorBrowsable(EditorBrowsableState.Never)]
+        public static void ListenMessage(string processKey, Action<string> messageAction, bool resetAction = false)
+        {
+            AcceptMessage(processKey, messageAction, resetAction);
+        }
+
+        [Obsolete("This method is obsolete, please use SendMessage"), EditorBrowsable(EditorBrowsableState.Never)]
+        public static bool WriteData(string processKey, string message)
+        {
+            return SendMessage(processKey, message);
         }
 
         #endregion
