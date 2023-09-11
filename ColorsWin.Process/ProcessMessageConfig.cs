@@ -22,9 +22,9 @@ namespace ColorsWin.Process
         /// and the process key must be created in the window service first, 
         /// because ordinary users do not have permission to create the process key starting with "Global\\"
         /// </summary>
-        public static string GlobalTag = "";
+        public static string GlobalTag { get; set; } = "";
 
-        public static int BatchSendWaitTime = 5;
+        public static int BatchSendWaitTime { get; set; } = 5;
 
         /// <summary>
         /// Default path C:\temp

@@ -208,6 +208,7 @@ namespace ColorsWin.Process
         [Obsolete("Use ProcessMessageConfig.ProcessMessageType", true), EditorBrowsable(EditorBrowsableState.Never)]
         public static void Init(ProcessMessageType processType)
         {
+            ProcessMessageConfig.ProcessMessageType = processType;
             //foreach (var item in allMessageProxy)
             //{
             //    item.Value.Reset(processType);
