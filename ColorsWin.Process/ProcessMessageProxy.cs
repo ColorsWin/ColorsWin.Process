@@ -65,7 +65,7 @@ namespace ColorsWin.Process
             }
         }
 
-        internal void InitMessage()
+        internal void InitReadMessage()
         {
             InitMessageType(true);
         }
@@ -88,26 +88,33 @@ namespace ColorsWin.Process
 
         internal void InitMessageType(bool read)
         {
+            bool createNew = false;
             switch (processMessageType)
             {
                 case ProcessMessageType.ShareMemory:
-                    CreateShareMemoryMessage(read);
+                    CreateShareMemoryMessage(read, ref createNew);
                     break;
 
                 case ProcessMessageType.NamedPipe:
-                    CreateNamedPipeMessage(read);
+                    CreateNamedPipeMessage(read, ref createNew);
                     break;
 
                 case ProcessMessageType.File:
-                    CreateFileMessage(read);
+                    CreateFileMessage(read, ref createNew);
                     break;
 
                 default:
                     throw new NotImplementedException();
             }
+
+            if (createNew)
+            {
+                ProcessManager.AddToSystem(processKey, this);
+            }
         }
 
-        private void CreateShareMemoryMessage(bool read)
+
+        private void CreateShareMemoryMessage(bool read, ref bool createNew)
         {
             if (read)
             {
@@ -115,12 +122,13 @@ namespace ColorsWin.Process
                 {
                     acceptMessage = new MemoryMessage(processKey, read);
                     acceptMessage.AcceptData += (data) =>
-                    {                       
+                    {
                         if (actionData != null)
                         {
                             actionData(data);
                         }
                     };
+                    createNew = true;
                 }
             }
             else
@@ -128,12 +136,13 @@ namespace ColorsWin.Process
                 if (sendMessage == null)
                 {
                     sendMessage = new MemoryMessage(processKey, read);
+                    createNew = true;
                 }
             }
         }
 
 
-        private void CreateNamedPipeMessage(bool read)
+        private void CreateNamedPipeMessage(bool read, ref bool createNew)
         {
             if (read)
             {
@@ -148,6 +157,7 @@ namespace ColorsWin.Process
                             actionData(data);
                         }
                     };
+                    createNew = true;
                 }
             }
             else
@@ -155,18 +165,19 @@ namespace ColorsWin.Process
                 if (sendMessage == null)
                 {
                     sendMessage = new NamedPipeMessage(processKey, read);
+                    createNew = true;
                 }
             }
         }
 
-        private void CreateFileMessage(bool read)
+        private void CreateFileMessage(bool read, ref bool createNew)
         {
             if (read)
             {
                 if (acceptMessage == null)
                 {
                     acceptMessage = new FileMessage(processKey, read);
-
+                    createNew = true;
                     acceptMessage.AcceptData += (data) =>
                     {
                         if (actionData != null)
@@ -181,6 +192,7 @@ namespace ColorsWin.Process
                 if (sendMessage == null)
                 {
                     sendMessage = new FileMessage(processKey, read);
+                    createNew = true;
                 }
             }
         }

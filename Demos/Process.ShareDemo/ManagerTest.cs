@@ -1,4 +1,5 @@
 ﻿using ColorsWin.Process;
+using System;
 
 namespace Process.ShareTest
 {
@@ -30,7 +31,16 @@ namespace Process.ShareTest
                     break;
             }
 
-
+            var data = ProcessManager.GetAllProcessInfo();
+            foreach (var item in data)
+            {
+                string tempInfo = null;
+                foreach (var key in item.Info)
+                {
+                    tempInfo += key.ProcessKey + "   " + key.MessageType.ToString() + " " + key.ProxyType + "\r\n";
+                }
+                Console.WriteLine("【" + item.ProcessId + "】:\r\n" + tempInfo);
+            }
 
             //Run ProcessServiceDemo Test RunService
             //TestWinService.RunClient();

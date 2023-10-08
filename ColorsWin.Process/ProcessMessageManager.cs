@@ -9,11 +9,15 @@ namespace ColorsWin.Process
     public class ProcessMessageManager
     {
         private static Dictionary<string, ProcessMessageProxy> allMessageProxy;
-        public static event Action<string, string> AllMessageEvent;
 
         static ProcessMessageManager()
         {
             Init();
+        }
+
+        public static Dictionary<string, ProcessMessageProxy> GetAllMessageProxy()
+        {
+            return allMessageProxy;
         }
 
         private static void Init()
@@ -37,7 +41,7 @@ namespace ColorsWin.Process
 
         public static void CreateProcessKey(string processKey)
         {
-            InitProcessMessage(processKey);
+            CreateProcessMessageProxy(processKey);
             allMessageProxy[processKey].InitMessageType(false);
         }
 
@@ -63,6 +67,8 @@ namespace ColorsWin.Process
                 if (remove)
                 {
                     allMessageProxy.Remove(processKey);
+
+                    ProcessManager.RemoveToSystem(processKey);
                 }
             }
         }
@@ -72,10 +78,33 @@ namespace ColorsWin.Process
             return allMessageProxy.ContainsKey(processKey);
         }
 
+        public static byte[] ReadData(string processKey)
+        {
+            CreateProcessMessageProxy(processKey);
+            return allMessageProxy[processKey].ReadData();
+        }
+
+        public static void AcceptData(string processKey, Action<byte[]> messageAction, bool resetAction = false)
+        {
+            CreateProcessMessageProxy(processKey);
+            allMessageProxy[processKey].ChangeAction(messageAction, resetAction);
+            allMessageProxy[processKey].InitReadMessage();
+        }
+
+        public static bool SendData(string processKey, byte[] data)
+        {
+            CreateProcessMessageProxy(processKey);
+            return allMessageProxy[processKey].SendData(data);
+        }
+
         public static void AcceptMessage(string processKey, Action<string> messageAction, bool resetAction = false)
         {
-            InitProcessMessage(processKey, messageAction, resetAction);
-            allMessageProxy[processKey].InitMessage();
+            Action<byte[]> actionData = (data) =>
+            {
+                var buffer = ByteConvertHelper.FormBytes<string>(data);             
+                messageAction.Invoke(buffer);
+            };
+            AcceptData(processKey, actionData, resetAction);
         }
 
         public static bool SendMessage(string processKey, string message)
@@ -89,25 +118,6 @@ namespace ColorsWin.Process
             var data = ReadData(processKey);
             return ByteConvertHelper.FormBytes<string>(data);
         }
-
-        public static byte[] ReadData(string processKey)
-        {
-            InitProcessMessage(processKey);
-            return allMessageProxy[processKey].ReadData();
-        }
-
-        public static void AcceptData(string processKey, Action<byte[]> messageAction, bool resetAction = false)
-        {
-            InitProcessData(processKey, messageAction, resetAction);
-            allMessageProxy[processKey].InitMessage();
-        }
-
-        public static bool SendData(string processKey, byte[] data)
-        {
-            InitProcessMessage(processKey);
-            return allMessageProxy[processKey].SendData(data);
-        }
-
 
         public static void AcceptData<T>(string processKey, Action<T> messageAction, bool resetAction = false)
         {
@@ -124,9 +134,7 @@ namespace ColorsWin.Process
                     throw ex;
                 }
             };
-
-            InitProcessData(processKey, action, resetAction);
-            allMessageProxy[processKey].InitMessage();
+            AcceptData(processKey, action, resetAction);
         }
 
         public static bool SendData<T>(string processKey, T data)
@@ -141,9 +149,10 @@ namespace ColorsWin.Process
             return ByteConvertHelper.FormBytes<T>(data);
         }
 
+
         #region Private
 
-        private static void InitProcessMessage(string processKey)
+        private static void CreateProcessMessageProxy(string processKey)
         {
             if (!allMessageProxy.Keys.Contains(processKey))
             {
@@ -152,33 +161,7 @@ namespace ColorsWin.Process
             }
         }
 
-        private static void InitProcessMessage(string processKey, Action<string> action, bool resetAction = false)
-        {
-            Action<byte[]> actionData = (data) =>
-            {
-                var buffer = ByteConvertHelper.FormBytes<string>(data);
-                //OnAcceptMessage(processKey, buffer);
-                action.Invoke(buffer);
-            };
-            InitProcessData(processKey, actionData, resetAction);
-        }
-
-        private static void InitProcessData(string processKey, Action<byte[]> action, bool resetAction = false)
-        {
-            InitProcessMessage(processKey);
-            allMessageProxy[processKey].ChangeAction(action, resetAction);
-        }
-
-
-        internal static void OnAcceptMessage(string processKey, string message)
-        {
-            if (AllMessageEvent != null)
-            {
-                AllMessageEvent(processKey, message);
-            }
-        }
-
-        #endregion 
+        #endregion
 
         #region Default  
 
@@ -191,8 +174,7 @@ namespace ColorsWin.Process
 
         public static void AcceptMessage(Action<string> messageAction, bool resetAction = false)
         {
-            InitProcessMessage(defaultProcessKey, messageAction, resetAction);
-            allMessageProxy[defaultProcessKey].InitMessage();
+            AcceptMessage(defaultProcessKey, messageAction, resetAction);
         }
 
         public static bool SendMessage(string message)
@@ -201,7 +183,6 @@ namespace ColorsWin.Process
         }
 
         #endregion
-
 
         #region Obsolete Methord 
 
@@ -225,6 +206,18 @@ namespace ColorsWin.Process
         public static bool WriteData(string processKey, string message)
         {
             return SendMessage(processKey, message);
+        }
+
+
+        [Obsolete("This event is obsolete", true), EditorBrowsable(EditorBrowsableState.Never)]
+        public static event Action<string, string> AllMessageEvent;
+
+        internal static void OnAcceptMessage(string processKey, string message)
+        {
+            if (AllMessageEvent != null)
+            {
+                AllMessageEvent(processKey, message);
+            }
         }
 
         #endregion

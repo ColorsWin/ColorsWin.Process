@@ -39,5 +39,7 @@ namespace ColorsWin.Process
         public static Encoding Encoding { get; } = Encoding.Default;
 
         public static bool UnknowTypeUseSerializable { get; set; } = false;
+
+        internal const string SystemProcessKey = "SystemProcessKey";
     }
 }
