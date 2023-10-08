@@ -37,7 +37,7 @@ namespace Process.ShareTest
                 string tempInfo = null;
                 foreach (var key in item.Info)
                 {
-                    tempInfo += key.ProcessKey + "   " + key.MessageType.ToString() + " " + key.ProxyType + "\r\n";
+                    tempInfo += $"ProcessKey={key.ProcessKey},MessageType={ key.MessageType},ProxyType={ key.ProxyType} " + "\r\n";
                 }
                 Console.WriteLine("【" + item.ProcessId + "】:\r\n" + tempInfo);
             }

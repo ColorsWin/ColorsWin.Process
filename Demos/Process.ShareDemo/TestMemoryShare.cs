@@ -9,17 +9,12 @@ namespace Process.ShareTest
         {
             BaseTest.TestSend();
             // BaseTest.TestBatchSend(); 
-        } 
+        }
 
         public static void BaseOutput()
         {
             string processKey = "ProcessMessage_t";
             string processKey2 = "ProcessMessage_t2";
-
-            //ProcessMessageManager.AllMessageEvent += (key, message) =>
-            //{
-            //    Console.WriteLine($"Accept Message By AllMessageEvent,ProcessKey:{key}---Content:----" + message);
-            //};
 
             ProcessMessageManager.AcceptMessage(processKey, (message) =>
             {

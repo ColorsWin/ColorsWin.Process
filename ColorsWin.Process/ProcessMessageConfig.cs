@@ -40,6 +40,6 @@ namespace ColorsWin.Process
 
         public static bool UnknowTypeUseSerializable { get; set; } = false;
 
-        internal const string SystemProcessKey = "SystemProcessKey";
+        internal static string SystemProcessKey { get; } = "SystemProcessKey";
     }
 }

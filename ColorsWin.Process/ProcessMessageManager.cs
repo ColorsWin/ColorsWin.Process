@@ -10,15 +10,15 @@ namespace ColorsWin.Process
     {
         private static Dictionary<string, ProcessMessageProxy> allMessageProxy;
 
-        static ProcessMessageManager()
-        {
-            Init();
-        }
-
         public static Dictionary<string, ProcessMessageProxy> GetAllMessageProxy()
         {
             return allMessageProxy;
         }
+
+        static ProcessMessageManager()
+        {
+            Init();
+        } 
 
         private static void Init()
         {
@@ -29,12 +29,11 @@ namespace ColorsWin.Process
             allMessageProxy = new Dictionary<string, ProcessMessageProxy>();
         }
 
-
         public static ProcessMessageType GetProcessMessageType(string processKey)
         {
             if (allMessageProxy.ContainsKey(processKey))
             {
-                return allMessageProxy[processKey].GetProcessMessageType();
+                return allMessageProxy[processKey].GetMessageType();
             }
             return ProcessMessageType.None;
         }

@@ -70,12 +70,10 @@ namespace ColorsWin.Process
                 return;
             }
             var proxyType = processMessageProxy.GetProxyType();
-            var messageType = processMessageProxy.GetProcessMessageType();
+            var messageType = processMessageProxy.GetMessageType();
             var currentInfo = processKey + "/" + (int)messageType + "/" + (int)proxyType;
             ChangeData(processKey, currentInfo);
         }
-
-
 
         public static List<ProcessData> GetAllProcessInfo()
         {
@@ -94,18 +92,10 @@ namespace ColorsWin.Process
 
                 foreach (var item in listKeys)
                 {
-                    var keyInfo = item.Split(new string[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
-
-                    temp.Info.Add(new ProcessKeyInfo
-                    {
-                        ProcessKey = keyInfo[0],
-                        MessageType = (ProcessMessageType)int.Parse(keyInfo[1]),
-                        ProxyType = (ProxyType)int.Parse(keyInfo[2])
-                    });
+                    temp.Info.Add(new ProcessKeyInfo(item));
                 }
                 data.Add(temp);
             }
-
             return data;
         }
     }
@@ -120,11 +110,23 @@ namespace ColorsWin.Process
 
     public class ProcessKeyInfo
     {
-        public string Info { get; set; }
-        public string ProcessKey { get; set; }
+        public ProcessKeyInfo(string info)
+        {
+            Info = info;
 
-        public ProxyType ProxyType { get; set; }
+            var keyInfo = Info.Split(new string[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
+            ProcessKey = keyInfo[0];
+            MessageType = (ProcessMessageType)int.Parse(keyInfo[1]);
+            ProxyType = (ProxyType)int.Parse(keyInfo[2]);
+        }
 
-        public ProcessMessageType MessageType { get; set; }
+        public string Info { get; internal set; }
+
+
+        public string ProcessKey { get; internal set; }
+
+        public ProxyType ProxyType { get; internal set; }
+
+        public ProcessMessageType MessageType { get; internal set; }
     }
 }

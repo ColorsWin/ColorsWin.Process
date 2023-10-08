@@ -23,7 +23,7 @@ namespace ColorsWin.Process
             this.processMessageType = processMessageType;
         }
 
-        public ProcessMessageType GetProcessMessageType()
+        public ProcessMessageType GetMessageType()
         {
             return processMessageType;
         }
@@ -113,14 +113,14 @@ namespace ColorsWin.Process
             }
         }
 
-
-        private void CreateShareMemoryMessage(bool read, ref bool createNew)
+        private void CreateShareMemoryMessage(bool read, ref bool isCreateNew)
         {
             if (read)
             {
                 if (acceptMessage == null)
                 {
                     acceptMessage = new MemoryMessage(processKey, read);
+                    isCreateNew = true;
                     acceptMessage.AcceptData += (data) =>
                     {
                         if (actionData != null)
@@ -128,7 +128,7 @@ namespace ColorsWin.Process
                             actionData(data);
                         }
                     };
-                    createNew = true;
+
                 }
             }
             else
@@ -136,20 +136,19 @@ namespace ColorsWin.Process
                 if (sendMessage == null)
                 {
                     sendMessage = new MemoryMessage(processKey, read);
-                    createNew = true;
+                    isCreateNew = true;
                 }
             }
         }
 
-
-        private void CreateNamedPipeMessage(bool read, ref bool createNew)
+        private void CreateNamedPipeMessage(bool read, ref bool isCreateNew)
         {
             if (read)
             {
                 if (acceptMessage == null)
                 {
                     acceptMessage = new NamedPipeMessage(processKey, read);
-
+                    isCreateNew = true;
                     acceptMessage.AcceptData += (data) =>
                     {
                         if (actionData != null)
@@ -157,7 +156,7 @@ namespace ColorsWin.Process
                             actionData(data);
                         }
                     };
-                    createNew = true;
+
                 }
             }
             else
@@ -165,19 +164,19 @@ namespace ColorsWin.Process
                 if (sendMessage == null)
                 {
                     sendMessage = new NamedPipeMessage(processKey, read);
-                    createNew = true;
+                    isCreateNew = true;
                 }
             }
         }
 
-        private void CreateFileMessage(bool read, ref bool createNew)
+        private void CreateFileMessage(bool read, ref bool isCreateNew)
         {
             if (read)
             {
                 if (acceptMessage == null)
                 {
                     acceptMessage = new FileMessage(processKey, read);
-                    createNew = true;
+                    isCreateNew = true;
                     acceptMessage.AcceptData += (data) =>
                     {
                         if (actionData != null)
@@ -192,7 +191,7 @@ namespace ColorsWin.Process
                 if (sendMessage == null)
                 {
                     sendMessage = new FileMessage(processKey, read);
-                    createNew = true;
+                    isCreateNew = true;
                 }
             }
         }
@@ -217,7 +216,6 @@ namespace ColorsWin.Process
             }
         }
     }
-
 
     public enum ProxyType
     {
